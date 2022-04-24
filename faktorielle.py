@@ -3,4 +3,5 @@ while True:
     erg = 1
     for i in range(2, a + 1):
         erg *= i
-    print(erg)
+    with open("files/factorial.txt", "w") as f:
+        print(erg, file=f)
