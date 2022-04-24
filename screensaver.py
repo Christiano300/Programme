@@ -10,7 +10,9 @@ root, files = next(os.walk("files/minecraft-textures"))[::2]
 
 items = pygame.sprite.Group()
 
+
 class Item(pygame.sprite.Sprite):
+
     def __init__(self, pos: tuple, size: int, speed: tuple):
         pygame.sprite.Sprite.__init__(self)
         self.size = size
@@ -40,14 +42,17 @@ class Item(pygame.sprite.Sprite):
             self.retexture()
 
     def retexture(self):
-        self.texture = pygame.image.load(os.path.join(root, choice(files))).convert_alpha()
-        self.texture = pygame.transform.scale(self.texture, (self.size, self.size))
+        self.texture = pygame.image.load(os.path.join(
+            root, choice(files))).convert_alpha()
+        self.texture = pygame.transform.scale(self.texture,
+                                              (self.size, self.size))
         self.rect = self.texture.get_rect()
 
     def draw(self):
         screen.blit(self.texture, self.pos)
 
-for i in range(30):
+
+for i in range(3):
     current_item = Item((width, 100), 16, (1, 0.3))
     items.add(current_item)
 
@@ -59,9 +64,9 @@ while True:
         elif event.type == pygame.VIDEORESIZE:
             size = width, height = event.size
 
-    screen.fill((0,0,0))
+    # screen.fill((0,0,0))
     for i in items:
         i.draw()
         i.move()
     pygame.display.update()
-    uhr.tick(600)
+    uhr.tick(60)

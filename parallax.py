@@ -23,6 +23,7 @@ while True:
 
         elif event.type == pygame.MOUSEMOTION:
             pos = [event.pos[i] for i in range(len(size))]
+            pos[1] += 300
 
     screen.fill((0, 0, 0))
     for i, image in enumerate(images):
