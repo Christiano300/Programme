@@ -92,6 +92,7 @@ class Cube:
 
 Wurfel = Cube()
 time_a = time.time()
+Wurfel.print_faces()
 Wurfel.move(["U'"])
 time_b = time.time()
 

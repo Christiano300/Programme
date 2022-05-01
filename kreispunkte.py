@@ -22,10 +22,5 @@ while True:
     screen.fill((255, 255, 255))
     pygame.draw.circle(screen, (0, 0, 0), (320, 240), RADIUS + 2, 5)
     for i, point in enumerate(points):
-        pygame.draw.aaline(
-            screen,
-            ((i / 360 * 255) % 255, 0, -i / 360 * 255 % 255),
-            point,
-            points[(2 * i) % length],
-        )
+        pygame.draw.aaline(screen, (0, 0, 0), point, points[(2 * i) % length])
     pygame.display.update()
