@@ -3,10 +3,8 @@ import json
 import shutil
 
 path = os.getenv('APPDATA') + "/.minecraft/assets"
-versions = [
-    i.rstrip(".json") for i in os.listdir(path + "/indexes")
-    if i.startswith("1.")
-]
+versions = [i.rstrip(".json") for i in os.listdir(
+    path + "/indexes") if i.startswith("1.")]
 print("Available versions:", *versions, sep="\n")
 while True:
     user_input = input("Select a version: ")
