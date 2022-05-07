@@ -30,14 +30,14 @@ class Item(pygame.sprite.Sprite):
         self.vel[1] += 0.05
 
         if self.rect.bottom >= height:
-            self.vel[1] = abs(self.vel[1]) * -15
+            self.vel[1] = abs(self.vel[1]) * -.96
             self.pos[1] = height - self.size
 
         if self.rect.left > width:
-            self.size = randint(10, 300)
+            self.size = randint(10, 150)
             self.pos[0] = -self.size - 25
             self.pos[1] = randint(0, height - self.size - 50)
-            self.vel[0] = uniform(.2, 1.4)
+            self.vel[0] = uniform(.2, 5)
             self.vel[1] = uniform(.2, .8)
             self.retexture()
 
@@ -52,7 +52,7 @@ class Item(pygame.sprite.Sprite):
         screen.blit(self.texture, self.pos)
 
 
-for i in range(30):
+for i in range(3):
     current_item = Item((width, 100), 16, (1, 0.3))
     items.add(current_item)
 
@@ -69,4 +69,4 @@ while True:
         i.draw()
         i.move()
     pygame.display.update()
-    uhr.tick(600)
+    uhr.tick(60)

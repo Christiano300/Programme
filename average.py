@@ -48,6 +48,7 @@ while True:
 
     for y, row in enumerate(hmap):
         for x in range(width):
+            
             sum = 0
             try:
                 for i in (-1, 0, 1):
