@@ -1,4 +1,4 @@
-from random import choice
+from random import randint
 
 poker_symbole = ["Herz", "Karo", "Pik", "Kreuz"]
 poker_werte = ["2", "3", "4", "5", "6", "7", "8",
@@ -6,7 +6,7 @@ poker_werte = ["2", "3", "4", "5", "6", "7", "8",
 
 poker_karten = [i + j for i in poker_symbole for j in poker_werte]
 
-aktive_karten = poker_karten
+aktive_karten = poker_karten[:]
 spieler_liste = []
 tischkarten = []
 pot = 0
@@ -29,15 +29,11 @@ class Spieler:
         self.passwert = 0
         self.schon_erhöht = False
 
-    def karte_nehmen(self, karte):
+    def karte_geben(self, karte):
         self.handkarten.append(karte)
 
     def __str__(self):
-        nachricht = self.name + " hat die Karten: "
-        for i in self.handkarten:
-            nachricht = nachricht + i + ", "
-        nachricht = nachricht.strip(", ")
-        return nachricht
+        return f"{self.name} hat die Karten: {', '.join(self.handkarten)}"
 
     def setzen(self, menge):
         self.geld -= menge
@@ -100,7 +96,6 @@ def setzkampf():
             eingabe = input("Wähle eine Aktion: ")
             if eingabe == "p":
                 print(i.name + " hat gepasst.")
-                global pot
                 i.passen()
                 pot += i.setzwert
                 i.has_passed = True
@@ -117,27 +112,25 @@ for i in range(1, spielerzahl + 1):
     spieler_liste.append(Spieler(playername, startgeld))
 
 
-def karte_geben():
-    kartenname = choice(aktive_karten)
-    aktive_karten.remove(kartenname)
-    return kartenname
+def karte_waehlen():
+    return aktive_karten.pop(randint(0, len(aktive_karten)))
 
 
 # karten ziehen
 for i in spieler_liste:
     for j in range(2):
-        i.karte_nehmen(karte_geben())
+        i.karte_nehmen(karte_waehlen())
 
 # karten zeigen
 for i in spieler_liste:
-    input(" ")
+    input()
     print(i)
-    input(" ")
+    input()
     print("\n" * 75)
 
 # flops audecken
 for i in range(3):
-    tischkarten.append(karte_geben())
+    tischkarten.append(karte_waehlen())
 
 print("Die Flops werden aufgedeckt.")
 print(f"Es sind: {tischkarten[0]}, {tischkarten[1]} und {tischkarten[2]}")
