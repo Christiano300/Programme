@@ -1,127 +1,132 @@
 import nbtlib
-
-palette = []
-index = 0
-index2 = 0
-blocks = []
+import tqdm
+color_lut = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink",
+             "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"]
 
 
-
-def import_data():
-    index = file.find('palette')
+def inputInt(text: str) -> int:
     while True:
-        index = file.find("minecraft", index + 1)
-        if index != -1:
-            index2 = file.find('"', index)
-            palette.append(file[index + 10:index2])
+        try:
+            a = input(text)
+            if a == "":
+                return 0
+            else:
+                return int(a)
+        except ValueError:
+            print("Must be a whole number")
+
+
+def import_data(file):
+    global palette
+    palette = []
+    print("Getting palette...")
+    for i in tqdm.tqdm(file['palette']):
+        if i.get('Properties'):
+            for prop in i['Properties']:
+                if prop == "variant":
+                    if "log" in i['Name'].lower():
+                        name = i['Properties'][prop] + "_log"
+                    elif "planks" in i['Name'].lower():
+                        name = i['Properties'][prop] + "_planks"
+                    else:
+                        continue
+                    break
+                elif prop == "type":
+                    name = i['Properties'][prop]
+                    break
+                elif prop == "color" and not "wool" in i['Name']:
+                    if "stained_hardened_clay" in i['Name'].lower():
+                        name = ("light_gray" if i['Properties']['color'] == "silver" else i[
+                            'Properties']['color']) + "_terracotta"
+                        break
+            else:
+                name = i['Name']
         else:
-            break
-    #positions
-    index = file.find('blocks')
-    while True:
-        index = file.find("pos", index + 1)
-        if index != -1:
-            index2 = file.find(",", index)
-            x = int(file[index + 6:index2])
+            name = i['Name']
+        name = name.replace("minecraft:", "")
+        if name == "melon_block":
+            name = "melon"
+        elif name == "brick_block":
+            name = "bricks"
+        elif name == "stonebrick":
+            name = "stone_bricks"
+        elif name == "nether_brick":
+            name = "nether_bricks"
+        elif name == "hardened_clay":
+            name = "terracotta"
 
-            index = file.find(' ', index2)
-            index2 = file.find(',', index)
-            y = int(file[index + 1:index2])
+        palette.append(name)
+    data = file.get("Data")
+    if data != None:
+        blocks = []
+        print("Processing blocks...")
+        for i, block in tqdm.tqdm(enumerate(file['blocks'])):
+            if palette[block['state']] in "concrete_powder":
+                blockdata = data[i]
+                if palette[block['state']] in ["concrete", "concrete_powder", "terracotta"]:
+                    blocks.append(
+                        [*block['pos'], block['state'], blockdata])
+            else:
+                blocks.append([*block['pos'], block['state']])
+        return blocks
+    else:
+        return [[*i['pos'], i['state']] for i in file['blocks']]
 
-            index = index2 + 1
-            index2 = file.find(']', index)
-            z = int(file[index:index2])
-            
-            index = file.find('state', index2) + 7
-            index2 = file.find('}', index)
-            try:
-                state = int(file[index:index2])
-            except ValueError:
-                print(f"ValueError from postion {index} to {index2}:\n" + file[index - 10:index2 + 10] + f"\n{'^':^21s}")
-                quit()
-            
 
-            blocks.append([x, y, z, palette[state]])
-        else:
-            break
+def write_function(name, delay=0):
+    if delay:
+        print("WIP")
+    else:
+        function_lines = []
+        for i in blocks:
+            color = color_lut[i[4]] + "_" if len(i) == 5 else ""
+            if len(i) == 5:
+                color = color_lut[i[4]] + "_"
+            else:
+                color = ""
+            function_lines.append(
+                f"setblock ~{i[0] + XOffset} ~{i[1] + YOffset} ~{i[2] + ZOffset} {color + palette[i[3]]}")
+        with open(name + ".mcfunction", 'w') as f:
+            f.write("\n".join(function_lines))
 
-    index = file.find('size')
-    index = file.find('[', index)
-    index
-
-def simple_function(name):
-    function_text = ""
-    for i in blocks:
-        function_text = function_text + "setblock ~" + str(i[0] + XOffset) + " ~" + str(i[1] + YOffset) + " ~" + str(i[2] + ZOffset) + " " + i[3] + "\n"
-    function_file = open(name + ".mcfunction", 'w')
-    function_file.write(function_text)
-    function_file.close()
-    
-def complex_function():
-    print("Still to do")
 
 while True:
-    filename = input("Enter filename with extension: ")
+    # filename = input("Enter filename with extension: ")
+    filename = "files/fuchs.nbt"
     try:
-        file = nbtlib.serialize_tag(nbtlib.load(filename, gzipped=True))
-    except:
-        print("Could not find file. Please try again.")
-    else:
+        file = nbtlib.load(filename, gzipped=True)
         break
-import_data()
+    except FileNotFoundError:
+        print("Could not find file. Please try again.")
+
+with open("files/fuchsnbt.txt", "w") as f:
+    f.write(nbtlib.serialize_tag(file))
+
+blocks = import_data(file)
 function_name = input("Function Name (Press enter for filename): ")
 if function_name == "":
-    function_name = filename.rstrip(".nbt")
+    function_name = filename[:-4]
 
 while True:
-    delay = input("Delay between layers(y/n): ")
-    if delay == "y":
-        delay = int(input("Delay between layers(ticks): "))
+    do_delay = input("Delay between layers (y/N): ").lower()
+    if do_delay == "y":
         while True:
+            delay = inputInt("Delay between layers(ticks): ")
             if delay > 0:
-                simple = False
                 break
-            else:
-                print("Invalid Input. Please try again.")
-        break
-    elif delay == "n":
-        simple = True
+            print("Delay must be greater than zero")
+
+    elif do_delay in ("", "n"):
+        delay = 0
         break
     else:
-        print("Invalid input. Please try again.")
+        print("Choose a valid option")
 
-while True:
-    XOffset = input("X Offset: ")
-    try:
-        XOffset = int(XOffset)
-    except:
-        print("Invalid Input. Please try again.")
-    else:
-        break
+XOffset = inputInt("X Offset: ")
+YOffset = inputInt("Y Offset: ")
+ZOffset = inputInt("Z Offset: ")
 
-while True:
-    YOffset = input("Y Offset: ")
-    try:
-        YOffset = int(YOffset)
-    except:
-        print("Invalid Input. Please try again.")
-    else:
-        break
-
-while True:
-    ZOffset = input("Z Offset: ")
-    try:
-        ZOffset = int(ZOffset)
-    except:
-        print("Invalid Input. Please try again.")
-    else:
-        break
-
-
-if simple:
-    simple_function(function_name)
-else:
-    complex_function()
+write_function(function_name, delay)
 
 """
 {"": {size: [3, 4, 3], entities: [], blocks: [{pos: [0, 0, 0], state: 0}, {pos: [1, 0, 0], state: 0}, {pos: [2, 0, 0], state: 0}, {pos: [0, 0, 1], state: 0}, {pos: [1, 0, 1], state: 0}, {pos: [2, 0, 1], state: 0}, {pos: [0, 0, 2], state: 0}, {pos: [1, 0, 2], state: 0}, {pos: [2, 0, 2], state: 0}, {pos: [0, 1, 0], state: 1}, {pos: [1, 1, 0], state: 1}, {pos: [2, 1, 0], state: 1}, {pos: [0, 2, 0], state: 1}, {pos: [1, 2, 0], state: 1}, {pos: [2, 2, 0], state: 1}, {pos: [0, 3, 0], state: 1}, {pos: [1, 3, 0], state: 1}, {pos: [2, 3, 0], state: 1}, {pos: [0, 1, 1], state: 1}, {pos: [1, 1, 1], state: 1}, {pos: [2, 1, 1], state: 1}, {pos: [0, 2, 1], state: 1}, {pos: [1, 2, 1], state: 1}, {pos: [2, 2, 1], state: 1}, {pos: [0, 3, 1], state: 1}, {pos: [1, 3, 1], state: 1}, {pos: [2, 3, 1], state: 1}, {pos: [0, 1, 2], state: 1}, {pos: [1, 1, 2], state: 1}, {pos: [2, 1, 2], state: 1}, {pos: [0, 2, 2], state: 1}, {pos: [1, 2, 2], state: 1}, {pos: 
