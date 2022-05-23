@@ -67,7 +67,7 @@ while True:
         else:
             color = [255, 255 + i[2], 255 + i[2]]
         pygame.draw.aaline(screen, color, pos1, pos2)
-    screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
+    # screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
     
     # for i, star in enumerate(stars):
     #     stars[i] = [star[0] * STAR_SPEED, star[1] * STAR_SPEED, star[2]]
@@ -90,7 +90,7 @@ while True:
                 i += 1
     
     center[0] = (center[0] + ROTATION_SPEED) % width
-    pygame.draw.aaline(screen, (255, 0, 0), (center[0] + 10, center[1] + 10), (center[0] - 10, center[1] - 10))
-    pygame.draw.aaline(screen, (255, 0, 0), (center[0] + 10, center[1] - 10), (center[0] - 10, center[1] + 10))
+    # pygame.draw.aaline(screen, (255, 0, 0), (center[0] + 10, center[1] + 10), (center[0] - 10, center[1] - 10))
+    # pygame.draw.aaline(screen, (255, 0, 0), (center[0] + 10, center[1] - 10), (center[0] - 10, center[1] + 10))
     pygame.display.update()
     clock.tick(60)
