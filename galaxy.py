@@ -24,7 +24,7 @@ while True:
                 stars = []
                 for i in range(NUM_STARS):
                     r = sqrt(random()) * (min(size) - 100) / 2
-                    stars.append([r, uniform(0, twopi), pi / (r + randint(-50, 50))])
+                    stars.append([r, uniform(0, twopi), max(.01, pi / (r + randint(-100, 100)))])
             elif event.key == pygame.K_q:
                 pygame.quit()
                 quit()
@@ -37,7 +37,7 @@ while True:
     screen.fill("0x000000")
     for i, star in enumerate(stars):
         pygame.draw.rect(screen, starcolor, (cos(
-            star[1]) * star[0] + width / 2, sin(star[1]) * star[0] + height / 2, 1, 1), 0)
+            star[1]) * star[0] + width / 2, sin(star[1]) * star[0] + height / 2, 2, 2), 0)
         # pygame.display.update()
         stars[i][1] += star[2]
         stars[i][1] %= twopi
