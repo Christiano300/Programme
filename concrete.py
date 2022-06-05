@@ -33,10 +33,9 @@ def resize(size: tuple):
     screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     menu_buttons = [[[PADDING + i * (w := round((width - PADDING * 2) / 16)) + 3, PADDING + 3], \
                 [w - 6, w - 6], menu_buttons[i][2]] for i in range(16)]
-    print(size)
 
 
-def button_check(bpos: tuple, bsize: tuple, mpos: tuple):
+def button_pressed(bpos: tuple, bsize: tuple, mpos: tuple):
     return mpos[0] in range(bpos[0], bpos[0] + bsize[0]) \
         and mpos[1] in range(bpos[1], bpos[1] + bsize[1])
 
@@ -66,6 +65,15 @@ def draw():
             pygame.draw.line(screen, "0x000000", (20, 30), (30, 10), 3)
     pygame.display.update()
 
+def tile():
+    global blocks
+    colors = [menu_buttons.index(i) for i in menu_buttons if i[2]]
+    if len(colors):
+        blocks = []
+        for i in range(width // BLOCKSIZE):
+            for j in range(height // BLOCKSIZE):
+                blocks.append([choice(colors), i, j])
+    draw()
 
 resize((810, 540))
 draw()
@@ -79,28 +87,21 @@ while True:
 
         elif event.type == pygame.VIDEORESIZE:
             resize(event.size)
-            draw()
+            tile()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if menu_open:
-                if button_check((5, 75), (30, 30), event.pos):
+                if button_pressed((5, 75), (30, 30), event.pos):
                     menu_open = False
                     draw()
                     break
                 for i, button in enumerate(menu_buttons):
-                    if button_check(button[0], button[1], event.pos):
+                    if button_pressed(button[0], button[1], event.pos):
                         menu_buttons[i][2] = False if menu_buttons[i][2] else True
-                        print(f"Button {i} pressed at {event.pos}")
-                        colors = [menu_buttons.index(i) for i in menu_buttons if i[2]]
-                        if len(colors):
-                            blocks = []
-                            for i in range(width // BLOCKSIZE):
-                                for j in range(height // BLOCKSIZE):
-                                    blocks.append([choice(colors), i, j])
-                        draw()
+                        tile()
                         break
             else:
-                if button_check((5, 5), (30, 30), event.pos):
+                if button_pressed((5, 5), (30, 30), event.pos):
                     menu_open = True
                     draw()
 
@@ -111,12 +112,7 @@ while True:
                 
             elif event.key == pygame.K_r:
                 colors = [menu_buttons.index(i) for i in menu_buttons if i[2]]
-                if len(colors):
-                    blocks = []
-                    for i in range(width // BLOCKSIZE):
-                        for j in range(height // BLOCKSIZE):
-                            blocks.append([choice(colors), i, j])
-                    draw()
+                tile()
                             
             elif event.key == pygame.K_F1:
                 f1_mode = False if f1_mode else True
