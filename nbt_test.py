@@ -21,6 +21,7 @@ def import_data(file):
     palette = []
     print("Getting palette...")
     for i in tqdm.tqdm(file['palette']):
+        props = []
         if i.get('Properties'):
             for prop in i['Properties']:
                 if prop == "variant":
@@ -39,6 +40,10 @@ def import_data(file):
                         name = ("light_gray" if i['Properties']['color'] == "silver" else i[
                             'Properties']['color']) + "_terracotta"
                         break
+                elif prop == "color":
+                    pass
+                else:
+                    props.append([prop, i['Properties'][prop]])
             else:
                 name = i['Name']
         else:
@@ -54,8 +59,11 @@ def import_data(file):
             name = "nether_bricks"
         elif name == "hardened_clay":
             name = "terracotta"
-
-        palette.append(name)
+        
+        if props:
+            palette.append(f"{name}[{','.join([f'{i[0]}={i[1]}' for i in props])}]")
+        else:
+            palette.append(name)
     data = file.get("Data")
     if data != None:
         blocks = []
@@ -74,32 +82,34 @@ def import_data(file):
 
 
 def write_function(name, delay=0):
+    air = palette.index("air") if "air" in palette else -1
     if delay:
         print("WIP")
     else:
+        print("Writing function")
         function_lines = []
         for i in blocks:
             color = color_lut[i[4]] + "_" if len(i) == 5 else ""
-            if len(i) == 5:
-                color = color_lut[i[4]] + "_"
-            else:
-                color = ""
-            function_lines.append(
-                f"setblock ~{i[0] + XOffset} ~{i[1] + YOffset} ~{i[2] + ZOffset} {color + palette[i[3]]}")
+            color = color_lut[i[4]] + "_" if len(i) == 5 else ""
+            if i[3] != air:
+                function_lines.append(
+                    f"setblock ~{i[0] + XOffset} ~{i[1] + YOffset} ~{i[2] + ZOffset} {color + palette[i[3]]}")
         with open(name + ".mcfunction", 'w') as f:
             f.write("\n".join(function_lines))
+        print("Finished writing function")
 
 
 while True:
-    # filename = input("Enter filename with extension: ")
-    filename = "files/fuchs.nbt"
+    filename = input("Enter filename with extension: ")
+    print("Loading file ...")
     try:
         file = nbtlib.load(filename, gzipped=True)
+        print("File loaded successfully")
         break
     except FileNotFoundError:
         print("Could not find file. Please try again.")
 
-with open("files/fuchsnbt.txt", "w") as f:
+with open("ignfiles/nbt.txt", "w") as f:
     f.write(nbtlib.serialize_tag(file))
 
 blocks = import_data(file)
@@ -127,7 +137,6 @@ YOffset = inputInt("Y Offset: ")
 ZOffset = inputInt("Z Offset: ")
 
 write_function(function_name, delay)
-
 """
 {"": {size: [3, 4, 3], entities: [], blocks: [{pos: [0, 0, 0], state: 0}, {pos: [1, 0, 0], state: 0}, {pos: [2, 0, 0], state: 0}, {pos: [0, 0, 1], state: 0}, {pos: [1, 0, 1], state: 0}, {pos: [2, 0, 1], state: 0}, {pos: [0, 0, 2], state: 0}, {pos: [1, 0, 2], state: 0}, {pos: [2, 0, 2], state: 0}, {pos: [0, 1, 0], state: 1}, {pos: [1, 1, 0], state: 1}, {pos: [2, 1, 0], state: 1}, {pos: [0, 2, 0], state: 1}, {pos: [1, 2, 0], state: 1}, {pos: [2, 2, 0], state: 1}, {pos: [0, 3, 0], state: 1}, {pos: [1, 3, 0], state: 1}, {pos: [2, 3, 0], state: 1}, {pos: [0, 1, 1], state: 1}, {pos: [1, 1, 1], state: 1}, {pos: [2, 1, 1], state: 1}, {pos: [0, 2, 1], state: 1}, {pos: [1, 2, 1], state: 1}, {pos: [2, 2, 1], state: 1}, {pos: [0, 3, 1], state: 1}, {pos: [1, 3, 1], state: 1}, {pos: [2, 3, 1], state: 1}, {pos: [0, 1, 2], state: 1}, {pos: [1, 1, 2], state: 1}, {pos: [2, 1, 2], state: 1}, {pos: [0, 2, 2], state: 1}, {pos: [1, 2, 2], state: 1}, {pos: 
 [2, 2, 2], state: 1}, {pos: [0, 3, 2], state: 1}, {pos: [1, 3, 2], state: 1}, {pos: [2, 3, 2], state: 1}], palette: [{Name: "minecraft:sandstone"}, {Name: "minecraft:air"}], DataVersion: 1963}}
