@@ -5,7 +5,6 @@ code = []
 print("Farbencode wurde ausgewählt")
 
 def eingabe():
-    farben = ["Rot", "Gelb", "Grün", "Blau", "Pink", "Weiß"]
     while True:
         try:
             guess = input("Versuch: ").split(" ")

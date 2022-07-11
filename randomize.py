@@ -10,11 +10,11 @@ if len(sys.argv) >= 2:
 	try:
 		seed = int(sys.argv[1])
 	except Exception:
-		print('The seed "{}" is not an integer.'.format(sys.argv[1]))
+		print(f'The seed "{sys.argv[1]}" is not an integer.')
 		exit()
 	random.seed(seed)
-	datapack_name = 'random_recipes_{}'.format(seed)
-	datapack_desc = 'Recipe Randomizer, Seed: {}'.format(seed)
+	datapack_name = f'random_recipes_{seed}'
+	datapack_desc = f'Recipe Randomizer, Seed: {seed}'
 else:
 	print('If you want to use a specific randomizer seed integer, use: "python randomize.py <seed>"')
 	datapack_name = 'random_recipes'
