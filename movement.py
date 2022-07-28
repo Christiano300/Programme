@@ -1,26 +1,25 @@
-from math import ceil
-import random
+from math import ceil, sqrt
+from random import seed, randint, random
 import pygame
 pygame.init()
 
 size = width, height = 640, 480
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 
 def random_from_pos(coords: list, chance: float = .2):
-    random.seed(coords[0])
-    multi = random.randint(1, 200)
-    mod = random.randint(1, 50)
-    random.seed(coords[0] + coords[1] * multi % mod)
-    return random.random() > chance
-
+    seed(coords[0])
+    multi = randint(1, 200)
+    mod = randint(1, 200)
+    seed(coords[0] + coords[1] * multi % mod)
+    return random() < chance
 
 playerpos = [width // 2 - 10, height // 2 - 10]
-camerpos = [0, 0]
-keys_pressed = {i: False for i in "wasd"}
+campos = [0, 0]
+mouse_pressed = False
+boundary = pygame.Rect(50, 50, width - 100, height - 100)
 MOVEMENT_SPEED = 3
-boundary = pygame.Rect(70, 70, width - 140, height - 140)
 
 while True:
     for event in pygame.event.get():
@@ -31,41 +30,49 @@ while True:
             if event.key == pygame.K_q:
                 pygame.quit()
                 quit()
-            elif event.unicode in "wasd":
-                keys_pressed[event.unicode] = True
-
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                keys_pressed["w"] = False
-            elif event.key == pygame.K_a:
-                keys_pressed["a"] = False
-            elif event.key == pygame.K_s:
-                keys_pressed["s"] = False
-            elif event.key == pygame.K_d:
-                keys_pressed["d"] = False
-
-    if pygame.Rect.collidepoint(boundary, playerpos):
-        if keys_pressed["w"]:
-            playerpos[1] -= MOVEMENT_SPEED
-        if keys_pressed["a"]:
-            playerpos[0] -= MOVEMENT_SPEED
-        if keys_pressed["s"]:
-            playerpos[1] += MOVEMENT_SPEED
-        if keys_pressed["d"]:
-            playerpos[0] += MOVEMENT_SPEED
-    else:
-        if keys_pressed["w"]: pass
+        elif event.type == pygame.VIDEORESIZE:
+            width, height = event.size
+        
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pressed = True
+        
+        elif event.type == pygame.MOUSEBUTTONUP:
+            mouse_pressed = False
+    
+    # spieler bewegen
+    if mouse_pressed:
+        # differenzvektor ausrechnen
+        diff = [p - m for m, p in zip([width // 2, height // 2], pygame.mouse.get_pos())]
+        # länge des vektors berechnen
+        l = sqrt(sum((i ** 2 for i in diff)))
+        # skalierung berechnen und vektor mit skalierung multiplizieren
+        # ergebnis: vektor hat die selbe richtung aber die länge von MOVEMENT_SPEED
+        scale = MOVEMENT_SPEED / l if l else 0
+        norm = [i * scale for i in diff]
+        new = [n + p for n, p in zip(norm, playerpos)]
+        # wenn der spieler in der box ist spieler bewegen, ansonsten die Kamera
+        if pygame.Rect.collidepoint(boundary, new):
+            playerpos = new
+        else:
+            campos[0] += norm[0]
+            campos[1] += norm[1]
+    
     screen.fill(0x000000)
     
-    for i in range(ceil(width / 50)):
-        for j in range(ceil(height / 50)):
-            if random_from_pos([i, j], .9):
-                x = i * 50 + camerpos[0]
-                y = j * 50 + camerpos[1]
-                pygame.draw.rect(screen, 0x0050ff, (x, y, 50, 50))
+    for i in range(cx := int(campos[0] / 50) - 1, ceil(width / 50) + cx + 2):
+        for j in range(cy := int(campos[1] / 50) - 1, ceil(height / 50) + cy + 2):
+            if random_from_pos([i, j], .1):
+                color = 0x009000
+            elif random_from_pos([i, j], .9):
+                color = 0x00c800
+            else:
+                color = 0xa8683e
+            xs = i * 50 - campos[0]
+            ys = j * 50 - campos[1]
+            pygame.draw.rect(screen, color, (xs, ys, 50, 50))
+                
         
-    pygame.draw.rect(screen, 0xffc1bc,
-                     (playerpos[0] - 10, playerpos[1] - 10, 20, 20))
+    pygame.draw.rect(screen, 0xffc1bc,(playerpos[0] - 10, playerpos[1] - 10, 20, 20))
         
     pygame.display.update()
     clock.tick(60)

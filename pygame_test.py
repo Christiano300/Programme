@@ -136,7 +136,6 @@ raphi_cursor = (
 "                                          XX............XXXXXXXXXXXXXXXX......XXX                                               ")
 
 luca_cursor = pygame.cursors.compile(raphi_cursor, black='X', white='.', xor='.')
-print(type(luca_cursor))
 pygame.mouse.set_cursor((128, 128), (65, 51), *luca_cursor)
 
 screen.fill("0xffffff")

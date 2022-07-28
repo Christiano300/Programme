@@ -8,8 +8,8 @@ screen = pygame.display.set_mode(groesse)
 
 
 def draw_background():
-    pygame.draw.rect(screen, [0, 0, 0, 0], [0, 0, breite, hoehe], 0)
-    pygame.draw.circle(screen, [255, 255, 255], [320, 320], 1, 0)
+    # screen.fill(0)
+    pygame.draw.circle(screen, 0xffffff, [320, 320], 1, 0)
 
 
 class Partikel(pygame.sprite.Sprite):
@@ -46,20 +46,18 @@ class Partikel(pygame.sprite.Sprite):
 def animieren(gruppe):
     draw_background()
     for rechteck in gruppe:
-        rechteck.apply_gravity([320, 320], 10)
+        rechteck.apply_gravity([320, 320], 1)
         rechteck.bewegen()
-        os.system('cls')
-        print(rechteck.rect)
     # for rechteck in gruppe:
     #     gruppe.remove(rechteck)
     #     if pygame.sprite.spritecollide(rechteck, gruppe, False):
     #         rechteck.speed[0] = -rechteck.speed[0]
     #         rechteck.speed[1] = -rechteck.speed[1]
     #     gruppe.add(rechteck)
-        if rechteck.rect.left < 0 or rechteck.rect.right > breite:
-            rechteck.kill()
-        if rechteck.rect.top < 0 or rechteck.rect.bottom > hoehe:
-            rechteck.kill()
+        # if rechteck.rect.left < 0 or rechteck.rect.right > breite:
+        #     rechteck.kill()
+        # if rechteck.rect.top < 0 or rechteck.rect.bottom > hoehe:
+        #     rechteck.kill()
         # if rechteck.rect.left > breite:
         #     rechteck.rect.move_ip(0, rechteck.rect.top)
         # elif rechteck.rect.right < 0:
@@ -76,7 +74,7 @@ def animieren(gruppe):
 gruppe = pygame.sprite.Group()
 uhr = pygame.time.Clock()
 
-partikel = Partikel([255, 255, 150], [3, 3], [100, 200], [1, 0])
+partikel = Partikel(0xffff96, [3, 3], [100, 200], [1, 0])
 gruppe.add(partikel)
 pygame.display.flip()
 
