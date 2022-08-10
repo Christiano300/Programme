@@ -61,11 +61,11 @@ class Cube:
                 self.faces_to_move_outer = {}
                 self.faces_to_move_inner = {27:  29, 29: 35, 53: 33, 33: 27, 28: 32, 32: 34, 34: 30}
         self.temp = self.faces[:]
-        for i in self.faces_to_move_inner.keys():
+        for i in self.faces_to_move_inner:
             self.faces[self.faces_to_move_inner[i]] = self.temp[i]
         
         self.temp = self.faces[:]
-        for i in self.faces_to_move_outer.keys():
+        for i in self.faces_to_move_outer:
             self.faces[self.faces_to_move_outer[i]] = self.temp[i]
 
     def print_faces(self):

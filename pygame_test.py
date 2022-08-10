@@ -135,13 +135,15 @@ raphi_cursor = (
 "                                          XX...........XXXXXXXXXXXXXXXXXX.....XXX                                               ",
 "                                          XX............XXXXXXXXXXXXXXXX......XXX                                               ")
 
-luca_cursor = pygame.cursors.compile(raphi_cursor, black='X', white='.', xor='.')
-pygame.mouse.set_cursor((128, 128), (65, 51), *luca_cursor)
+print(len(raphi_cursor))
+luca_cursor = pygame.cursors.compile(raphi_cursor, black='X', white='.', xor='o')
+pygame.mouse.set_cursor((128, 128), (65, 51), *luca_cursor, )
 
 screen.fill("0xffffff")
 pygame.draw.rect(screen, "0xf04f93", (100, 200, 365, 200), 200, 2000)
 pygame.draw.circle(screen, "0xabcdef", (200, 100), 35.4, 20, True, False, True, False)
 pygame.draw.ellipse(screen, "0xfedcab", (100, 150, 534, 260))
+pygame.draw.rect(screen, 0xff7f00, (50, 50, 128, 128))
 while True:
     
     for event in pygame.event.get():

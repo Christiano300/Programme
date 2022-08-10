@@ -1,5 +1,4 @@
 from math import ceil, sqrt
-from random import seed, randint, random
 import pygame
 pygame.init()
 
@@ -9,11 +8,8 @@ clock = pygame.time.Clock()
 
 
 def random_from_pos(coords: list, chance: float = .2):
-    seed(coords[0])
-    multi = randint(1, 200)
-    mod = randint(1, 200)
-    seed(coords[0] + coords[1] * multi % mod)
-    return random() < chance
+    h = hash(str(hash(tuple(coords))))
+    return h % 100 < chance * 100
 
 playerpos = [width // 2 - 10, height // 2 - 10]
 campos = [0, 0]
@@ -32,7 +28,8 @@ while True:
                 quit()
         elif event.type == pygame.VIDEORESIZE:
             width, height = event.size
-        
+            boundary = pygame.Rect(50, 50, width - 100, height - 100)
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pressed = True
         
