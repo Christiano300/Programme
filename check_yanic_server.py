@@ -1,7 +1,9 @@
 import requests
 import json
 
-url = "https://api.mcstatus.io/v1/status/java/116.202.217.71"
+# ip = "116.202.217.71"
+ip = "einfachnurmaxi.de"
+url = "https://api.mcstatus.io/v1/status/java/" + ip
 r = requests.get(url)
 j = json.loads(r.text)
 online = j['online']

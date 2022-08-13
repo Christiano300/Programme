@@ -1,24 +1,32 @@
 from time import time
-from typing import overload, Callable
+from typing import overload, Callable, Union, List, Sequence
 import pygame
+
 pygame.font.init()
 
+if __name__ == "__main__":
+    print("This is a module and should not be run directly")
+    quit()
+
+
+def center(ow: int, oh: int, iw: int, ih: int) -> List[int]:
+    return [ow // 2 - iw // 2, oh // 2 - ih // 2]
 
 def lerp(a, b, t): return a * (1 - t) + b * t
 
 
-def lighter(color: int, amount: float) -> pygame:
+def lighter(color: pygame.Color, amount: float) -> pygame.Color:
     r, g, b = color.r, color.g, color.b
     return pygame.Color(int(lerp(r, 255, amount)), int(lerp(g, 255, amount)), int(lerp(b, 255, amount)))
 
 
-def darker(color: int, amount: float) -> pygame:
+def darker(color: pygame.Color, amount: float) -> pygame.Color:
     r, g, b = color.r, color.g, color.b
     return pygame.Color(int(lerp(0, r, amount)), int(lerp(0, g, amount)), int(lerp(0, b, amount)))
 
 
-def get_color(color: pygame.Color | int | str, default: int) -> int:
-    if isinstance(color, (list, tuple)) and len(color) == 3:
+def get_color(color: Union[pygame.Color, int, str], default: int) -> pygame.Color:
+    if isinstance(color, (list, tuple)) and len(color) in (3, 4):
         return pygame.Color(*color)
     elif isinstance(color, int):
         try:
@@ -36,7 +44,7 @@ def get_color(color: pygame.Color | int | str, default: int) -> int:
         return pygame.Color(default)
 
 
-def get_font(font: pygame.font.Font | str):
+def get_font(font: Union[pygame.font.Font, str]):
     if isinstance(font, pygame.font.Font):
         return font
     elif isinstance(font, str) and "_" in font and font.count("_") == 1:
@@ -48,6 +56,8 @@ def get_font(font: pygame.font.Font | str):
     else:
         return None
 
+def draw_widgets(surface: pygame.Surface):
+    Widget.group.draw(surface)
 
 class Widget(pygame.sprite.Sprite):
     group = pygame.sprite.Group()
@@ -62,29 +72,24 @@ class Widget(pygame.sprite.Sprite):
         self.image = pygame.Surface(self.rect.size)
         Widget.group.add(self)
 
-    def draw(self, surface_dest: pygame.Surface):
-        surface_dest.blit(self.image, self.rect)
-
-    def render(self):
-        pass
-
-    @overload
-    def config(self, rect: pygame.Rect, text: str, color: pygame.Color, command: Callable[[], None],
-               active: bool, textcolor: pygame.Color, font: pygame.font.Font) -> dict | None:
-        ...
-
     def config(self, **kwargs):
         if kwargs:
             for k, v in kwargs.items():
-                if k in "color":
-                    self.__setattr__(k, get_color(v, 0xf0f0f0))
+                if k == "color":
+                    setattr(self, k, get_color(v, 0xf0f0f0))
                 elif k == "textcolor":
-                    self.__setattr__(k, get_color(v, 0x000000))
+                    setattr(self, k, get_color(v, 0x000000))
                 elif k == "font":
-                    self.__setattr__(k, get_font(v))
+                    setattr(self, k, get_font(v))
+                elif k == "rect":
+                    if isinstance(v, pygame.Rect):
+                        setattr(self, k, v)
+                    else:
+                        setattr(self, k, pygame.Rect(v))
                 else:
-                    self.__setattr__(k, v)
+                    setattr(self, k, v)
             self.render()
+            return self
         else:
             return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
 
@@ -97,6 +102,7 @@ class Button(Widget):
                  textcolor: pygame.Color = 0x000000, font: pygame.font.Font = None):
         super().__init__(rect, text)
         Button.group.add(self)
+        Widget.group.add(self)
         self.command = command
         self.color = get_color(color, 0xf0f0f0)
         self.textcolor = get_color(textcolor, 0x000000)
@@ -105,43 +111,121 @@ class Button(Widget):
         self.font = get_font(font)
         self.render()
 
+    @overload
+    def config(self, rect: pygame.Rect, text: str, color: pygame.Color, command: Callable[[], None],
+               active: bool, textcolor: pygame.Color, font: pygame.font.Font) -> Union[dict, None]:
+        ...
+
+    def config(self, **kwargs):
+        return super().config(**kwargs)
+
     def render(self):
         if not self.font:
             self.font = pygame.font.Font(None, self.rect.height)
+        w, h = self.rect.width, self.rect.height
+        s = self.font.size(self.text)
         if self.pressed:
             self.image.fill(lighter(self.color, .6))
-            pygame.draw.rect(self.image, darker(self.color, .7),
-                             (0, 0, self.rect.width - 1, self.rect.height - 1))
-            pygame.draw.rect(self.image, darker(self.color, .9),
-                             (1, 1, self.rect.width - 2, self.rect.height - 2))
-            pygame.draw.rect(self.image, darker(self.color, .6),
-                             (1, 1, self.rect.width - 3, self.rect.height - 3))
-            pygame.draw.rect(self.image, self.color,
-                             (2, 2, self.rect.width - 4, self.rect.height - 4))
+            pygame.draw.rect(self.image, darker(
+                self.color, .7), (0, 0, w - 1, h - 1))
+            pygame.draw.rect(self.image, darker(
+                self.color, .9), (1, 1, w - 2, h - 2))
+            pygame.draw.rect(self.image, darker(
+                self.color, .6), (1, 1, w - 3, h - 3))
+            pygame.draw.rect(self.image, self.color, (2, 2, w - 4, h - 4))
             self.image.blit(self.font.render(self.text, True,
-                            self.textcolor), (4, self.rect.height // 6 + 1))
+                            self.textcolor), ((c := center(*self.rect.size, *s))[0] + 1, c[1] + 1))
         else:
             self.image.fill(darker(self.color, .6))
-            pygame.draw.rect(self.image, lighter(self.color, .6),
-                             (0, 0, self.rect.width - 1, self.rect.height - 1))
-            pygame.draw.rect(self.image, darker(self.color, .7),
-                             (1, 1, self.rect.width - 2, self.rect.height - 2))
-            pygame.draw.rect(self.image, darker(self.color, .9),
-                             (1, 1, self.rect.width - 3, self.rect.height - 3))
-            pygame.draw.rect(self.image, self.color,
-                             (2, 2, self.rect.width - 4, self.rect.height - 4))
+            pygame.draw.rect(self.image, lighter(
+                self.color, .6), (0, 0, w - 1, h - 1))
+            pygame.draw.rect(self.image, darker(
+                self.color, .7), (1, 1, w - 2, h - 2))
+            pygame.draw.rect(self.image, darker(
+                self.color, .9), (1, 1, w - 3, h - 3))
+            pygame.draw.rect(self.image, self.color, (2, 2, w - 4, h - 4))
             color = self.textcolor if self.active else 0x6d6d6dff
-            self.image.blit(self.font.render(self.text, True,
-                            color), (3, self.rect.height // 6))
+            self.image.blit(self.font.render(
+                self.text, True, color), center(*self.rect.size, *s))
 
-    def update(self, mousepos: tuple, pressed: bool):
+    def update(self, event: pygame.event.Event, pressed: bool):
         if pressed:
-            if self.active and pygame.Rect.collidepoint(self.rect, mousepos):
+            if self.active and pygame.Rect.collidepoint(self.rect, event.pos):
                 self.pressed = True
                 self.render()
-                self.command() if self.command else 0
+                if self.command:
+                    self.command()
         elif self.pressed:
             self.pressed = False
+            self.render()
+
+
+class DropdownMenu(Widget):
+    group = pygame.sprite.Group()
+
+    def __init__(self, rect: pygame.Rect, text: str = "", color: pygame.Color = 0xf0f0f0,
+                 textcolor: pygame.Color = 0x000000, expansion: int = 200,
+                 options: Sequence[str] = None, font: pygame.font.Font = None):
+        super().__init__(rect, text)
+        DropdownMenu.group.add(self)
+        Widget.group.add(self)
+        self.color = get_color(color, 0xf0f0f0)
+        self.textcolor = get_color(textcolor, 0x000000)
+        self.expansion = expansion
+        self.options = [] if options is None else list(options)
+        self.font = get_font(font)
+        self.selected = -1  # Index of selected Element, -1 if None
+        self.opened = False
+        self.render()
+
+    @overload
+    def config(self, rect: pygame.Rect, text: str, color: pygame.Color,
+               textcolor: pygame.Color, expansion: int,
+               options: Sequence[str], font: pygame.font.Font) -> Union[dict, None]: ...
+
+    def config(self, **kwargs):
+        return super().config(**kwargs)
+
+    def render(self):
+        if not self.font:
+            self.font = pygame.font.Font(None, self.rect.height)
+        w, h = self.rect.width, self.rect.height
+        if self.opened:
+            self.image = pygame.Surface((w, min(h + self.expansion, h * (len(self.options) + 1))))
+        else:
+            self.image = pygame.Surface(self.rect.size)
+        s = self.font.size(self.text)
+        self.image.fill(lighter(self.color, .6))
+        pygame.draw.rect(self.image, darker(
+            self.color, .7), (0, 0, w - 1, h - 1))
+        pygame.draw.rect(self.image, darker(
+            self.color, .9), (1, 1, w - 2, h - 2))
+        pygame.draw.rect(self.image, darker(
+            self.color, .6), (1, 1, w - 3, h - 3))
+        pygame.draw.rect(self.image, self.color, (2, 2, w - 4, h - 4))
+        self.image.blit(self.font.render(self.text, True,
+                        self.textcolor), center(*self.rect.size, *s))
+        if self.opened:
+            pygame.draw.polygon(self.image, self.textcolor, [
+                (w - h // 1.15, h // 1.6),
+                (w - h // 2.7 + 1, h // 1.6),
+                (w - (h // 2.3 + h // 5.2), h // 2.7),
+                (w - (h // 2.3 + h // 5.2 + 1), h // 2.7 + 1),
+                ])
+            for i, x in enumerate(self.options):
+                pygame.draw.rect(self.image, self.color, (0, h * (i + 1), w, h))
+
+        else:
+            pygame.draw.polygon(self.image, self.textcolor, [
+                (w - h // 1.15, h // 2.7),
+                (w - h // 2.7, h // 2.7),
+                (w - (h // 2.3 + h // 5.2), h // 1.6)])
+
+    def update(self, event: pygame.event.Event):
+        if pygame.Rect.collidepoint(self.rect, event.pos):
+            pass
+        elif self.opened:
+            self.opened = False
             self.render()
 
 
@@ -154,7 +238,7 @@ class EntryGroup(pygame.sprite.Group):
         return bool(self.focus_entry)
 
     def key_action(self, event):
-        if event.key == pygame.K_BACKSLASH:
+        if event.key == pygame.K_BACKSPACE:
             # delete last character
             self.focus_entry.text = self.focus_entry.text[:-1]
             self.focus_entry.render(True)
@@ -164,7 +248,7 @@ class EntryGroup(pygame.sprite.Group):
             self.focus_entry.render(False)
             self.focus_entry = None
         else:
-            # add event.unicode to focused entry
+            # add typed character to focused entry
             self.focus_entry.text += event.unicode
             self.focus_entry.render(False)
 
@@ -175,30 +259,40 @@ class EntryGroup(pygame.sprite.Group):
                 i.focused = True
                 i.timerstart = time()
                 break
-            else:
+            elif i.focused:
                 i.focused = False
 
 
 class Entry(Widget):
     group = EntryGroup()
 
-    def __init__(self, rect: pygame.Rect, prompt: str = "", allow_empty: bool = True,
+    def __init__(self, rect: pygame.Rect, prompt: str = "",
                  color: pygame.Color = 0xffffff, textcolor: pygame.Color = 0x000000,
                  active: bool = True, font: pygame.font.Font = None):
         Entry.group.add(self)
+        Widget.group.add(self)
         super().__init__(rect, "")
         self.prompt = prompt
-        self.allow_empty = allow_empty
         self.color = get_color(color, 0xffffff)
         self.textcolor = get_color(textcolor, 0x000000)
         self.active = active
         self.focused = False
+        self.font = font
         self.render()
+
+    @overload
+    def config(selfrect: pygame.Rect, prompt: str, allow_empty: bool,
+               color: pygame.Color, textcolor: pygame.Color,
+               active: bool, font: pygame.font.Font = None) -> Union[dict, None]:
+        ...
+
+    def config(self, **kwargs):
+        return super().config(**kwargs)
 
     def render(self, full: bool = True):
         if not self.font:
             self.font = pygame.font.Font(None, self.rect.height)
-        w = self.font.size(self.text)[0]
+        width = self.font.size(self.text)[0]
         x = min(self.rect.width - x - 10, 0)
 
     def draw(self, surface_dest: pygame.Surface):

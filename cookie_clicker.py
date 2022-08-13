@@ -2,7 +2,6 @@ from math import ceil, sqrt
 from random import randint
 
 import pygame
-import pygame.gfxdraw
 
 from pygaminter import Button
 
@@ -36,8 +35,8 @@ makers = [{"name": "Cursor", "base_price": 15, "price_multi": 1.15, "cps": .1, "
            "price_multi": 1.15, "cps": 1400, "bought": 0},
           {"name": "Temple", "base_price": 20000000,
            "price_multi": 1.15, "cps": 7800, "bought": 0},
-          {"name": "_unknown_", "base_price": 330000000,
-           "price_multi": 1.15, "cps": 0, "bought": 0}]
+          {"name": "Wizard Tower", "base_price": 330000000,
+           "price_multi": 1.15, "cps": 50000, "bought": 0}]
 
 
 cookie = pygame.Surface((200, 200), pygame.SRCALPHA)
@@ -84,7 +83,7 @@ class Plus(pygame.sprite.Sprite):
 
     def update(self):
         if self.fade:
-            self.rect = self.rect.move(0, -1)
+            self.rect.move_ip(0, -1)
             self.image.set_alpha(self.fade)
             self.fade -= 3
         else:
@@ -109,7 +108,7 @@ while True:
                 cooldown = 20
             else:
                 Button.group.update(event.pos, True)
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             Button.group.update(event.pos, False)
 
     screen.fill(0x173951)
