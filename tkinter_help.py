@@ -11,7 +11,7 @@ colors = ["red", "orange", "yellow", "green", "blue",
 for i in range(10):
     if i:
         Button(root, bg=colors[i], width=i, height=0, text="Hallo", fg='#ff0', font=(
-            "Segoe UI", 50, "")).pack()
+            "Segoe UI", -20, "")).pack()
     else:
         Button(root, width=i, height=1, text="Hallo", state=DISABLED).pack()
 Button(root, text="iiiiiiiiii").pack()

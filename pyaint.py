@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 
-size = width, height = 640, 480
+size = width, height = 1820, 1000
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
@@ -10,7 +10,8 @@ mouse_pressed = False
 shift_pressed = False
 strength = 20
 colors = ["0xff0000", "0xff7f05", "0xf0e000", "0x00ff00",
-          "0x00ffa0", "0x007fff", "0x0000ff", "0xd000ff"]
+          "0x00ffa0", "0x007fff", "0x0000ff", "0xBA00FF",
+          "0xffffff", "0x000000", "0xFF59F8"]
 color = 0
 shapes = ["square", "circle"]
 shape = 0
@@ -49,7 +50,11 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            quit()
+            pygame.init()
+            screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+            repen()
+            screen.fill("0xffffff")
+            pygame.display.flip()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             prev_pos = pygame.mouse.get_pos()
@@ -70,10 +75,20 @@ while True:
             elif event.key == pygame.K_s:
                 shape = (shape + 1) % len(shapes)
                 repen()
-            
+
+            elif event.key == pygame.K_q:
+                pygame.quit()
+                quit()
+
+            elif event.key == pygame.K_w:
+                screen.fill(0xffffff)
+
+            elif event.key == pygame.K_b:
+                screen.fill(0)
+
             elif event.key in (pygame.K_LSHIFT, pygame.K_RSHIFT):
                 shift_pressed = True
-        
+
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LSHIFT, pygame.K_RSHIFT):
                 shift_pressed = False

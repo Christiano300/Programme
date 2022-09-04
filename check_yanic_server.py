@@ -1,6 +1,7 @@
 import requests
 import json
 
+# ip = "play.hypixel.net"
 # ip = "116.202.217.71"
 ip = "einfachnurmaxi.de"
 url = "https://api.mcstatus.io/v1/status/java/" + ip
@@ -10,8 +11,10 @@ online = j['online']
 if online:
     print("Server online")
     if j['response']["players"]["online"]:
+        print(f'{j["response"]["players"]["online"]} / {j["response"]["players"]["max"]} Spielern')
         sample = j['response']["players"]["sample"]
-        print(f"Spieler: {', '.join((i['name'] for i in sample))}")
+        if sample:
+            print(f"Spieler: {', '.join((i['name'] for i in sample))}")
     else:
         print("Niemand online")
 else:

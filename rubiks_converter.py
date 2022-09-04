@@ -1,5 +1,9 @@
 from PIL import Image, ImageGrab, UnidentifiedImageError
 
+colors = [0x1633b2, 0xea0000, 0xffffff, 0xff7500, 0x25ed1f, 0xf6f511]
+
+colors = [(i >> 16 & 255, i >> 8 & 255, i & 255) for i in colors]
+
 while True:
     name = input(
         "Enter Filename with extension (leave empty to read from clipboard): ")
@@ -32,16 +36,11 @@ while True:
                 print("Image cannot be opened and identified.")
             else:
                 im = im.convert("RGB")
-                break
 
-colors = {(255, 255, 255): ".", (0, 0, 0): "X",
-          (0, 0, 255): "o", (255, 0, 0): " "}
-strings = []
-pixels = im.getdata()
-for i in range(im.size[1]):
-    line = []
-    for j in range(im.size[0]):
-        line.append(colors[pixels[i * im.size[0] + j]])
-    strings.append("".join(line))
-print("_custom_cursor_ = (\"", "\",\n\"".join(strings), "\")", sep="")
-print("pygame.cursors.compile(_custom_cursor_, black='X', white='.', xor='o')")
+
+data = im.getdata()
+
+new = [min(colors, key=lambda a: sum(abs(x - y) for x, y in zip(a, i))) for i in data]
+
+im.putdata(new)
+im.show()

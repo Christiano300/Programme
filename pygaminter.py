@@ -1,5 +1,6 @@
 from time import time
-from typing import overload, Callable, Union, List, Sequence
+from typing import Callable, List, Sequence, Union, overload
+
 import pygame
 
 pygame.font.init()
@@ -11,6 +12,7 @@ if __name__ == "__main__":
 
 def center(ow: int, oh: int, iw: int, ih: int) -> List[int]:
     return [ow // 2 - iw // 2, oh // 2 - ih // 2]
+
 
 def lerp(a, b, t): return a * (1 - t) + b * t
 
@@ -50,14 +52,20 @@ def get_font(font: Union[pygame.font.Font, str]):
     elif isinstance(font, str) and "_" in font and font.count("_") == 1:
         name, rest = font.split("_")
         size = "".join((i for i in rest if i.isdecimal()))
-        bold = True if "b" in rest else False
-        italic = True if "i" in rest else False
+        bold = "b" in rest
+        italic = "i" in rest
         return pygame.font.SysFont(name, int(size), bold, italic)
-    else:
-        return None
+    elif isinstance(font, (tuple, list)) and isinstance(font[0], str) and isinstance(font[1], int) and font[1]:
+        if len(font) == 2:
+            return pygame.font.SysFont(font[0], abs(font[1]))
+        elif len(font) == 3 and isinstance(font[2], (str, list, tuple)):
+            bold = "b" in font[2]
+            italic = "i" in font[2]
+            return pygame.font.SysFont(font[0], abs(font[1], bold, italic))
 
 def draw_widgets(surface: pygame.Surface):
     Widget.group.draw(surface)
+
 
 class Widget(pygame.sprite.Sprite):
     group = pygame.sprite.Group()
@@ -149,13 +157,13 @@ class Button(Widget):
                 self.text, True, color), center(*self.rect.size, *s))
 
     def update(self, event: pygame.event.Event, pressed: bool):
-        if pressed:
+        if event.type == pygame.MOUSEBUTTONDOWN:
             if self.active and pygame.Rect.collidepoint(self.rect, event.pos):
                 self.pressed = True
                 self.render()
                 if self.command:
                     self.command()
-        elif self.pressed:
+        elif event.type == pygame.MOUSEBUTTONUP and self.pressed:
             self.pressed = False
             self.render()
 
@@ -191,7 +199,8 @@ class DropdownMenu(Widget):
             self.font = pygame.font.Font(None, self.rect.height)
         w, h = self.rect.width, self.rect.height
         if self.opened:
-            self.image = pygame.Surface((w, min(h + self.expansion, h * (len(self.options) + 1))))
+            self.image = pygame.Surface(
+                (w, min(h + self.expansion, h * (len(self.options) + 1))))
         else:
             self.image = pygame.Surface(self.rect.size)
         s = self.font.size(self.text)
@@ -211,9 +220,10 @@ class DropdownMenu(Widget):
                 (w - h // 2.7 + 1, h // 1.6),
                 (w - (h // 2.3 + h // 5.2), h // 2.7),
                 (w - (h // 2.3 + h // 5.2 + 1), h // 2.7 + 1),
-                ])
+            ])
             for i, x in enumerate(self.options):
-                pygame.draw.rect(self.image, self.color, (0, h * (i + 1), w, h))
+                pygame.draw.rect(self.image, self.color,
+                                 (0, h * (i + 1), w, h))
 
         else:
             pygame.draw.polygon(self.image, self.textcolor, [
@@ -237,30 +247,6 @@ class EntryGroup(pygame.sprite.Group):
     def focused(self):
         return bool(self.focus_entry)
 
-    def key_action(self, event):
-        if event.key == pygame.K_BACKSPACE:
-            # delete last character
-            self.focus_entry.text = self.focus_entry.text[:-1]
-            self.focus_entry.render(True)
-        elif event.key == pygame.K_ESCAPE:
-            # unfocus entries
-            self.focus_entry.focused = False
-            self.focus_entry.render(False)
-            self.focus_entry = None
-        else:
-            # add typed character to focused entry
-            self.focus_entry.text += event.unicode
-            self.focus_entry.render(False)
-
-    def mouse_pressed(self, mousepos):
-        for i in self.sprites():
-            if pygame.Rect.collidepoint(i.rect, mousepos):
-                self.focus_entry = i
-                i.focused = True
-                i.timerstart = time()
-                break
-            elif i.focused:
-                i.focused = False
 
 
 class Entry(Widget):
@@ -289,13 +275,45 @@ class Entry(Widget):
     def config(self, **kwargs):
         return super().config(**kwargs)
 
-    def render(self, full: bool = True):
+    def render(self):
         if not self.font:
             self.font = pygame.font.Font(None, self.rect.height)
         width = self.font.size(self.text)[0]
         x = min(self.rect.width - x - 10, 0)
+        
 
     def draw(self, surface_dest: pygame.Surface):
         super().draw(surface_dest)
 
     def get(self): return self.text
+
+    def focus(self):
+        for i in self.groups():
+            if isinstance(i, EntryGroup):
+                i.focus_entry = self
+
+    def update(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                # delete last character
+                self.focus_entry.text = self.focus_entry.text[:-1]
+                self.focus_entry.render(True)
+            elif event.key == pygame.K_ESCAPE:
+                # unfocus entries
+                self.focus_entry.focused = False
+                self.focus_entry.render(False)
+                self.focus_entry = None
+            else:
+                # add typed character to focused entry
+                self.focus_entry.text += event.unicode
+                self.focus_entry.render(False)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            for i in self.sprites():
+                if pygame.Rect.collidepoint(i.rect, event.pos):
+                    self.focus_entry = i
+                    i.focused = True
+                    i.timerstart = time()
+                    break
+                elif i.focused:
+                    i.focused = False

@@ -40,9 +40,10 @@ def translateback(m):
     else:
         return m
 
+
 def guenni(s):
     return " ".join(["SUS" for i in s.split()])
-    
+
 
 pattern = re.compile('(?<=: \")[^\"]*(?=\")')
 

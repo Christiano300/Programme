@@ -107,9 +107,9 @@ while True:
                      randint(-5, 5)], "+1", 0xffffffff, plusfont)
                 cooldown = 20
             else:
-                Button.group.update(event.pos, True)
+                Button.group.update(event, True)
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            Button.group.update(event.pos, False)
+            Button.group.update(event, False)
 
     screen.fill(0x173951)
 

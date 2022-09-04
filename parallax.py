@@ -5,7 +5,7 @@ import pygame
 pygame.init()
 size = 640, 480
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
-images = [pygame.image.load(f"plx{i}.png").convert_alpha() for i in range(4)]
+images = [pygame.image.load(f"files/parallax/plx{i}.png").convert_alpha() for i in range(4)]
 colors = [(255, 0, 0), (255, 106, 0), (255, 221, 0), (167, 236, 0)]
 
 pos = 320, 240

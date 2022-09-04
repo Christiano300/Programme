@@ -52,7 +52,7 @@ class Item(pygame.sprite.Sprite):
         screen.blit(self.texture, self.pos)
 
 
-for i in range(3):
+for i in range(10):
     current_item = Item((width, 100), 16, (1, 0.3))
     items.add(current_item)
 
@@ -69,4 +69,4 @@ while True:
         i.draw()
         i.move()
     pygame.display.update()
-    uhr.tick(60)
+    # uhr.tick(60)

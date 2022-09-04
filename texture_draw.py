@@ -27,9 +27,9 @@ while True:
             elif event.key == pygame.K_r:
                 screen.fill("0x000000")
     if mouse_pressed:
-        screen.blit(pygame.transform.rotozoom(pygame.transform.scale(pygame.image.load(os.path.join(root, choice(
-            files))), pygame.mouse.get_pos()), ((pos := pygame.mouse.get_pos())[0] + pos[1]) % 360, 1), (pos[0] // 2, pos[1] // 2))
-        # screen.blit((pygame.transform.rotozoom(pygame.transform.scale(pygame.image.load(os.path.join(
-        #     root, choice(files))), (64, 64)), (pos := pygame.mouse.get_pos())[0], 1)), (pos[0] - 32, pos[1] - 32))
+        # screen.blit(pygame.transform.rotozoom(pygame.transform.scale(pygame.image.load(os.path.join(root, choice(
+        #     files))), pygame.mouse.get_pos()), ((pos := pygame.mouse.get_pos())[0] + pos[1]) % 360, 1), (pos[0] // 2, pos[1] // 2))
+        screen.blit((pygame.transform.rotozoom(pygame.transform.scale(pygame.image.load(os.path.join(
+            root, choice(files))), (64, 64)), (pos := pygame.mouse.get_pos())[0], 1)), (pos[0] - 32, pos[1] - 32))
     pygame.display.update()
     clock.tick(60)
