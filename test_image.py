@@ -1,12 +1,11 @@
-import pygame
-import tqdm
-pygame.init()
-screen = pygame.display.set_mode([4200, 4200])
-for red in tqdm.tqdm(range(256)):
+from PIL import Image
+from tqdm import tqdm
+
+im = Image.new("RGB", (4096, 4096))
+
+for red in tqdm(range(256)):
     for green in range(256):
         for blue in range(256):
-            pygame.draw.rect(screen, (red, green, blue),
-                             (red % 16 * 256 + green, red // 16 * 256 + blue, 1, 1))
+            im.putpixel((red % 16 * 256 + green, red // 16 * 256 + blue), (red, green, blue))
 
-pygame.display.flip()
-pygame.image.save(screen, r".\files\colors3.png")
+im.show()

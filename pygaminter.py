@@ -156,7 +156,7 @@ class Button(Widget):
             self.image.blit(self.font.render(
                 self.text, True, color), center(*self.rect.size, *s))
 
-    def update(self, event: pygame.event.Event, pressed: bool):
+    def update(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.active and pygame.Rect.collidepoint(self.rect, event.pos):
                 self.pressed = True
@@ -166,6 +166,9 @@ class Button(Widget):
         elif event.type == pygame.MOUSEBUTTONUP and self.pressed:
             self.pressed = False
             self.render()
+    
+    def __repr__(self):
+        return f"Button: {self.text}"
 
 
 class DropdownMenu(Widget):
@@ -286,6 +289,7 @@ class Entry(Widget):
         super().draw(surface_dest)
 
     def get(self): return self.text
+    __str__ = get
 
     def focus(self):
         for i in self.groups():
@@ -317,3 +321,30 @@ class Entry(Widget):
                     break
                 elif i.focused:
                     i.focused = False
+    
+    def __repr__(self):
+        return f"Entry: {self.get}"
+
+class Menu:
+    def __init__(self, *widgets):
+        self.entry_group = EntryGroup()
+        self.widget_group = pygame.sprite.Group()
+        self.add(*widgets)
+    
+    def add(self, *widgets):
+        for i in widgets:
+            if isinstance(i, Entry):
+                self.entry_group.add(i)
+            elif isinstance(i, Widget):
+                self.widget_group.add(i)
+    
+    def update(self, event):
+        self.widget_group.update(event)
+        self.entry_group.update(event)
+    
+    def draw(self, surface):
+        self.widget_group.draw(surface)
+        self.entry_group.draw(surface)
+
+    def entry_focused(self):
+        return bool(self.entry_group.focus_entry)

@@ -87,15 +87,15 @@ while True:
             pygame.quit()
             quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            Button.group.update(event.pos, True)
+            Button.group.update(event)
             sliders.update(event.pos, 1)
             mouse_pressed = True
         elif event.type == pygame.MOUSEBUTTONUP:
-            Button.group.update(event.pos, False)
+            Button.group.update(event)
             sliders.update(event.pos, -1)
             mouse_pressed == False
 
-    screen.fill(0xffffff)
+    screen.fill(0xf0f0f0)
     if mouse_pressed:
         sliders.update(pygame.mouse.get_pos(), 0)
     sliders.draw(screen)

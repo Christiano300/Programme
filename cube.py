@@ -1,4 +1,4 @@
-from math import degrees, hypot, radians, sin, cos, pi, acos
+from math import atan2, hypot, radians, sin, cos
 import pygame
 pygame.init()
 
@@ -40,13 +40,15 @@ while True:
                 for i, vector in enumerate(corners):
                     print(f"{i + 1}: {vector.x} | {vector.y} | {vector.z}")
                 print(xpos, ypos)
+            elif event.key == pygame.K_r:
+                vrot.x = vrot.y = vrot.z = rot.x = rot.y = rot.z = 0
         elif event.type == pygame.VIDEORESIZE:
-            size = width, height = 640, 480
+            size = width, height = event.size
             hwidth, hheight = width / 2, height / 2
     rot += vrot
     screen.fill(0)
     for i in corners:
-        theta = acos(i.normalize().x) + (pi if sign(i.y) == -1 else 0)
+        theta = atan2(i.y, i.x)
         xpos = hwidth + cos(theta + radians(rot.z)) * hypot(i.x, i.y) * cos(radians(rot.x))
         ypos = hheight + sin(theta + radians(rot.z)) * hypot(i.x, i.y) * cos(radians(rot.y))
         pygame.draw.circle(screen, 0xffffff, (xpos, ypos), 3)

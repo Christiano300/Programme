@@ -3,7 +3,7 @@ import json
 
 # ip = "play.hypixel.net"
 # ip = "116.202.217.71"
-ip = "einfachnurmaxi.de"
+ip = "pc.einfachnurmaxi.de"
 url = "https://api.mcstatus.io/v1/status/java/" + ip
 r = requests.get(url)
 j = json.loads(r.text)

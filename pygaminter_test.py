@@ -19,13 +19,11 @@ for i in range(11):
         b.config(command=lambda x=b.config(): print(x))
     if i == 10:
         b.config(textcolor=0xdfdfdf)
-    if i:
-        b.config(font="Segoe UI_35b")
-    if i == 3:
-        b.font = "Segoe UI_35b"
+    if i % 2 == 1:
+        b.config(font="Lucida Sans_35b")
 
-# Button((400, 300, 120, 50), "Test", 0xabcdef)
-a = DropdownMenu((380, 100, 150, 50), "", 0xfedcba, expansion=500, options=[])
+
+b = Button((400, 300, 120, 50), "Test", 0xabcdef)
 
 
 while True:
@@ -35,15 +33,14 @@ while True:
             quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             Button.group.update(event)
-            Entry.group.mouse_pressed(event)
-            print(dir(event))
+            Entry.group.update(event)
 
         elif event.type == pygame.MOUSEBUTTONUP:
             Button.group.update(event)
 
         elif event.type == pygame.KEYDOWN:
             if Entry.group.focused():
-                Entry.group.key_action(event)
+                Entry.group.update(event)
             else:
                 # regular key control
                 pass

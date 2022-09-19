@@ -8,7 +8,8 @@ versions = [i.rstrip(".json") for i in os.listdir(
 print("Available versions:", *versions, sep="\n")
 while True:
     user_input = input("Select a version: ")
-    selection = user_input if user_input else "1.18"
+    selection = user_input if user_input else max(versions, key=lambda x: int(x.split(".")[-1]))
+    print(selection)
     if selection in versions:
         break
     print("Version not available")
