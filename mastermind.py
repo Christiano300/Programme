@@ -24,11 +24,8 @@ def eingabe():
     return guess
 
 def generate_code():
-    code = []
-    farben = ["Rot", "Gelb", "Grün", "Blau", "Pink", "Weiß"]
-    for i in range(4):
-        code.append(farben.pop(random.randint(0, len(farben) - 1)))
-    return code
+    return random.sample(["Rot", "Gelb", "Grün", "Blau", "Pink", "Weiß"], 4)
+    
 
 versuch = eingabe()
 code = generate_code()

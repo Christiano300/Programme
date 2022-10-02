@@ -9,6 +9,8 @@ clock = pygame.time.Clock()
 
 rot = pygame.Vector3()
 vrot = pygame.Vector3()
+coords = [None for i in range(8)]
+lines = [(0, 2), (2, 6), (6, 4), (4, 0)]
 
 sign = lambda x: 1 if x > 0 else -1 if x < 0 else 0
 
@@ -47,10 +49,13 @@ while True:
             hwidth, hheight = width / 2, height / 2
     rot += vrot
     screen.fill(0)
-    for i in corners:
+    for idx, i in enumerate(corners):
         theta = atan2(i.y, i.x)
         xpos = hwidth + cos(theta + radians(rot.z)) * hypot(i.x, i.y) * cos(radians(rot.x))
         ypos = hheight + sin(theta + radians(rot.z)) * hypot(i.x, i.y) * cos(radians(rot.y))
+        coords[idx] = xpos, ypos
         pygame.draw.circle(screen, 0xffffff, (xpos, ypos), 3)
+    for l in lines:
+        pygame.draw.line(screen, 0xffffff, coords[l[0]], coords[l[1]])
     pygame.display.update()
     clock.tick(60)

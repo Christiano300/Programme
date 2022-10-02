@@ -17,7 +17,7 @@ def reset():
     drawers = []
     for i in range(0, width, 8):
         drawers.append({"x": i, "y": height, "dir": 0,
-                       "size": randint(10, 100), "cooldown": 30, "color": randint(140, 230)})
+                       "size": randint(10, 100), "cooldown": 30, "color": randint(0, 360)}) # 140, 230
 
 
 def colorchange(color: int, factor: float):

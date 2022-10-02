@@ -18,7 +18,7 @@ while True:
             quit()
 
     screen.fill(0xffffff)
-    punkte = [[x * 50, wert(x * 50 - a)] for x in range(round(width / 50) + 1)]
+    punkte = [[x * 50 + 25, wert(x * 50 - a)] for x in range(round(width / 50) + 1)]
     # pygame.draw.lines(screen, 0, False, punkte, 3)
     for i in punkte:
         pygame.draw.circle(screen, 0, i, 5.7)

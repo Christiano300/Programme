@@ -23,11 +23,12 @@ class Chaser(pygame.sprite.Sprite):
     
     def update(self):
         center = self.pos.center
-        self.image = pygame.transform.rotate(self.surf, self.rot)
+        self.image = pygame.transform.rotate(self.surf, self.rot * 2)
         size = self.image.get_size()
         hSize = [n/2 for n in size]
         pos = (center[0]-hSize[0], center[1]-hSize[1])
         self.rect.left, self.rect.top = pos
+        pygame.draw.line(screen, 0xff0000, self.rect.center, (self.rect.centerx + cos(radians(self.rot)) * 20, self.rect.centery + sin(radians(self.rot)) * 20))
 
     
     def move(self, step: int):
@@ -71,8 +72,8 @@ while True:
         test.move(3)
     elif down_pressed:
         test.move(-3)
-    Chaser.group.update()
     screen.fill(0)
     Chaser.group.draw(screen)
+    Chaser.group.update()
     pygame.display.update()
     clock.tick(60)
