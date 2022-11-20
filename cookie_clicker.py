@@ -11,8 +11,8 @@ size = width, height = 640, 480
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
-cookies = 0
-cps = 0
+cookies = 43288543
+cps = 542864375
 cpf = 0.0
 cookiefont = pygame.font.SysFont("Lucida Bright", 40, True)
 cpsfont = pygame.font.SysFont("Lucida Sans", 20)

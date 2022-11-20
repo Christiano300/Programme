@@ -50,11 +50,6 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            pygame.init()
-            screen = pygame.display.set_mode(size, pygame.RESIZABLE)
-            repen()
-            screen.fill("0xffffff")
-            pygame.display.flip()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             prev_pos = pygame.mouse.get_pos()

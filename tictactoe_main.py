@@ -113,3 +113,4 @@ def contest(games: int, do_print: bool):
         start = (start + 1) % 2
     print(f"Spieler 1: {x}, Spieler 2: {y}, Unentschieden: {u}")
 
+contest(1000, False)

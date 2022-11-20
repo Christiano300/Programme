@@ -2,7 +2,7 @@ import json
 from time import sleep
 from winsound import Beep
 
-DIT = 40
+DIT = 50
 DAH = DIT * 3
 SYMBOL = DIT
 LETTER = DIT * 3

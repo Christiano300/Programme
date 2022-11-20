@@ -10,5 +10,5 @@ dateien = [i for i in files if i.endswith('.py') and not i[i.rfind("/") + 1].isd
 print(dateien)
 for i in dateien:
     with open(i, "r", encoding='utf-8') as f:
-        ges += len(f.read())
+        ges += len(re.findall(pattern, f.read()))
 print(ges)

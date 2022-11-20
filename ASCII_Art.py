@@ -1,7 +1,7 @@
 from PIL import Image
 
-path = "C:/Users/Christian/Pictures/paint.net/"
-file = "sanic.png"
+path = "C:/Users/Christian/Pictures/"
+file = "create.png"
 filepath = path + file
 
 
@@ -9,16 +9,18 @@ greyscale = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^
 l = len(greyscale) - 1
 # 1 Buchstabe ist 8 Pixel breit und 18 Pixdel hoch
 
-while True:
-    try:
-        im = Image.open(path + input("File name: "), 'r').convert("RGBA")
-    except FileNotFoundError:
-        print(
-            f"Datei {file} konnte im Verzeichnis \"{path}\" nicht gefunden werden")
-    except PermissionError:
-        print("Der Zugriff wurde verweigert oder die Datei konnte nicht gefunden werden")
-    else:
-        break
+# while True:
+#     try:
+#         im = Image.open(path + input("File name: "), 'r').convert("RGBA")
+#     except FileNotFoundError:
+#         print(
+#             f"Datei {file} konnte im Verzeichnis \"{path}\" nicht gefunden werden")
+#     except PermissionError:
+#         print("Der Zugriff wurde verweigert oder die Datei konnte nicht gefunden werden")
+#     else:
+#         break
+
+im = Image.open(filepath)
 
 inverted = bool(input("Invert Image? "))
 if inverted:

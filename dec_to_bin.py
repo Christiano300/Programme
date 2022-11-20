@@ -9,7 +9,7 @@ ganz = bin(int(n))[2:]
 komma = ""
 n %= 1
 i = 1
-while n != 0 and i < 20:
+while n != 0 and i < 200:
     if (aktuell := 1 / 2 ** i) <= n:
         komma += "1"
         n -= aktuell

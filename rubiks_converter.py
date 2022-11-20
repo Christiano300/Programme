@@ -1,6 +1,6 @@
 from PIL import Image, ImageGrab, UnidentifiedImageError
 
-colors = [0x1633b2, 0xea0000, 0xffffff, 0xff7500, 0x25ed1f, 0xf6f511]
+colors = [0x1633b2, 0xea0000, 0xffffff, 0xff7500, 0x25ed1f, 0xf6f511, 0x222222]
 
 colors = [(i >> 16 & 255, i >> 8 & 255, i & 255) for i in colors]
 
