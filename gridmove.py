@@ -8,6 +8,7 @@ clock = pygame.time.Clock()
 offset = [0, 0]
 zoom = 1
 linespace = 50
+dragging = False
 
 while True:
     for event in pygame.event.get():

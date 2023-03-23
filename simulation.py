@@ -74,7 +74,7 @@ def animieren(gruppe):
 gruppe = pygame.sprite.Group()
 uhr = pygame.time.Clock()
 
-partikel = Partikel(0xffff96, [3, 3], [100, 200], [1, 0])
+partikel = Partikel(0xffff96, [3, 3], [100, 200], [.758654327, -.36543])
 gruppe.add(partikel)
 pygame.display.flip()
 
@@ -83,4 +83,4 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
     animieren(gruppe)
-    uhr.tick(60)
+    # uhr.tick(60)

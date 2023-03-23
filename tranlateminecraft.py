@@ -3,7 +3,7 @@ from google_trans_new import google_translator
 tr = google_translator()
 
 
-with open("files/de_de.txt", "r") as file:
+with open("files/de_de.txt") as file:
     input_string = file.read()
 print("Converting to python...")
 input_string = input_string.replace("\\u201e", "„")
@@ -36,6 +36,7 @@ def translateback(m):
             exception_type = type(err).__name__
             print("An error occured: " + exception_type)
             print("The error was caused here: " + m)
+            print(err)
             return m
     else:
         return m

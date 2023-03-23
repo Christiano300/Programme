@@ -1,4 +1,4 @@
-from pygaminter import Button, Entry, DropdownMenu, draw_widgets
+from pygaminter import Button, Entry, draw_widgets
 import pygame
 pygame.init()
 

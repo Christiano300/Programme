@@ -59,9 +59,10 @@ def import_data(file):
             name = "nether_bricks"
         elif name == "hardened_clay":
             name = "terracotta"
-        
+
         if props:
-            palette.append(f"{name}[{','.join([f'{i[0]}={i[1]}' for i in props])}]")
+            palette.append(
+                f"{name}[{','.join([f'{i[0]}={i[1]}' for i in props])}]")
         else:
             palette.append(name)
     data = file.get("Data")

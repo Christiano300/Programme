@@ -17,7 +17,7 @@ def saturate(value, min_val=0, max_val=255):
     return value
 
 
-hmap = [[0 for i in range(width)] for j in range(height)]
+hmap: list[list[int | float]] = [[0 for i in range(width)] for j in range(height)]
 pxarray = pygame.PixelArray(screen)
 
 
@@ -44,7 +44,7 @@ while True:
             closewindow()
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             # indcrease height map at that position
-            change_heightmap(event.pos[1], event.pos[0], 2)
+            change_heightmap(event.pos[1], event.pos[0], 10)
 
     for y, row in enumerate(hmap):
         for x in range(width):
@@ -61,7 +61,7 @@ while True:
 
     for y, row in enumerate(hmap):
         for x, pixel in enumerate(row):
-            pxarray[x][y] = (pixel, 0, 0)
+            pxarray[x][y] = (pixel, 0, 0) # type: ignore
             # pxarray[x][y] = (255, 255- pixel, 255- pixel)
 
     pygame.display.update()

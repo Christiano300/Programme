@@ -15,7 +15,7 @@ def dreieck(l, w, x, y, c1, c2, dr):
     begin_fill()
     for i in range(3):
         fd(l)
-        left(120)
+    left(120)
     end_fill()
 
 

@@ -11,8 +11,8 @@ size = width, height = 640, 480
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
-cookies = 43288543
-cps = 542864375
+cookies = 0
+cps = 0
 cpf = 0.0
 cookiefont = pygame.font.SysFont("Lucida Bright", 40, True)
 cpsfont = pygame.font.SysFont("Lucida Sans", 20)
@@ -98,6 +98,7 @@ for i, maker in enumerate(makers):
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            print(clock.get_fps())
             pygame.quit()
             quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:

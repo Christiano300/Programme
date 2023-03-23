@@ -50,6 +50,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            quit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             prev_pos = pygame.mouse.get_pos()

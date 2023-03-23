@@ -1,3 +1,5 @@
 /__pycache__
 /ignfiles
 /files/tictactoe-ais/__pycache__
+/node_modules
+package*

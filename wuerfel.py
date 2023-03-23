@@ -10,7 +10,7 @@ def rechne(n, summe_bisher=0, groesstes = 1):
     else:
         varianten[summe_bisher] = varianten.get(summe_bisher, 0) + 1
 
-n = 3
+n = 2
 rechne(n)
 for k, v in varianten.items():
     varianten[k] *= factorial(n)

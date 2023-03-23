@@ -55,8 +55,8 @@ while True:
     # if not (sx in range(tilenx) and sy in range(tileny)):
     for i in range(tilenx):
         for j in range(tileny):
-            grid[i][j].height = sin(i + frame / 2) * \
-                20 - sin(j + frame / 3) * 40
+            grid[i][j].height = sin(i + frame / 1.5) * \
+                5 * sin(j + frame / 5) * 10
             frame += 0.0001
 
     screen.fill(0xC99FFF)

@@ -40,8 +40,9 @@ while True:
             quit()
 
     mousebuttons = pygame.mouse.get_pressed()
+    mouse = pygame.mouse.get_pos()
     if mousebuttons[0]:
-        s = [event.pos[0], event.pos[1], 0]
+        s = [mouse[0], mouse[1], 0]
         stars.append(s)
     elif mousebuttons[2]:
         center = list(pygame.mouse.get_pos())
@@ -67,7 +68,7 @@ while True:
         else:
             color = [255, 255 + i[2], 255 + i[2]]
         pygame.draw.aaline(screen, color, pos1, pos2)
-    # screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
+    screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
     
     # for i, star in enumerate(stars):
     #     stars[i] = [star[0] * STAR_SPEED, star[1] * STAR_SPEED, star[2]]

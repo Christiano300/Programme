@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Christian Patzl</title>
+    <style>
+        #path1  {
+            stroke-dasharray: 366.48;
+            stroke-dashoffset: 366.48;
+            animation: draw 4s ease;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="1000" height="500">
+        <g id="C">
+            <circle cx="50" cy="50" r="40" fill="#00af00" />
+            <circle cx="50" cy="50" r="25" fill="#f0fff0" />
+            <rect x="40" y="30" width="60" height="40" fill="#f0fff0" />
+        </g>
+        <g>
+            <path d="M 95 90 l 0 -60 q 5 -50 15 0 q 60 0 35 60 t -10 0 q 0 -50 -10 -40 q -30 10 -10 40"
+                fill="rgb(180, 20, 20)"
+                stroke="red"
+                stroke-width="3"
+                id="path1" />
+        </g>
+        <g id="r">
+            <rect x="165" y="25" width="50" height="65" fill="blue" stroke="aqua" stroke-width="5" />
+            <ellipse cx="215" cy="100" rx="35" ry="60" fill="white" />
+        </g>
+        <g id="i">
+            <rect x="240" y="10" width="15" height="80" style="fill:orangered;stroke:crimson;stroke-width: 3;"/>
+            <polygon style="fill:white" , points="230,10 270,40 230,50">
+        </g>
+        <g id="s">
+            <rect x="280" y="30" width="45" height="60" style="fill:deepskyblue" />
+            <ellipse cx="280" cy="70" rx="20" ry="10" fill="white" />
+            <ellipse cx="325" cy="50" rx="20" ry="10" fill="white" />
+        </g>
+        <g id="t">
+            <line x1="370" y1="10" x2="360" y2="90" style="stroke:goldenrod;stroke-width:15" />
+            <line x1="350" y1="30" x2="385" y2="30" style="stroke:goldenrod;stroke-width:15" stroke-linecap="round" />
+        </g>
+        <g id="i2">
+            <polyline points="410,30 400,40 420,60 420,90 400,90 400,60 420,40 410,30"
+                style="fill:green;stroke:chartreuse;stroke-width:3" />
+        </g>
+        <g id="a">
+            <ellipse cx="460" cy="55" rx="20" ry="30" style="fill:darkmagenta"/>
+            <rect x="475" y="30" width="15" height="55" fill="darkmagenta"/>
+            <line x1="440" y1="50" x2="460" y2="40" style="stroke:white;stroke-width:7;stroke-linecap: round;" />
+            <circle cx="460" cy="65" r="10" fill="white"/>
+        </g>
+        <g id="n">
+            <rect x="505" y="30" width="50" height="55" style="fill:indigo;stroke:blue;stroke-width:4"/>
+            <ellipse cx="530" cy="85" rx="10" ry="40" fill="white" />
+        </g>
+    </svg>
+
+</body>
+
+</html>
