@@ -5,7 +5,7 @@ import pygame
 pygame.init()
 
 size = width, height = 1920, 1080
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 
 points = [(i * 30 + 15, j * 30 + 15) for i in range(round(width / 30)) for j in range(round(height / 30))]
 

@@ -11,8 +11,8 @@ screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 STAR_FREQUENCY = 0
-WARP_DISTORTION = 1.5
-STAR_SPEED = .9
+WARP_DISTORTION = 1.1
+STAR_SPEED = .98
 ROTATION_SPEED = 0
 cooldown = 0
 stars = []
@@ -68,7 +68,7 @@ while True:
         else:
             color = [255, 255 + i[2], 255 + i[2]]
         pygame.draw.aaline(screen, color, pos1, pos2)
-    screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
+    # screen.blit(pygame.font.Font(None, 30).render(str(len(stars)), True, (0, 200, 0)), (100, 100))
     
     # for i, star in enumerate(stars):
     #     stars[i] = [star[0] * STAR_SPEED, star[1] * STAR_SPEED, star[2]]
