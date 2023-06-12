@@ -6,8 +6,8 @@ size = width, height = 1280, 720
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
-a = 1
-b = 2
+a = 2
+b = 4
 state = 0
 prev = 0
 t = 0
@@ -22,7 +22,7 @@ while True:
             pygame.quit()
             quit()
     
-    state = sin(t / 10) * 50
+    state = sin(t / 20) * 50
     if state * prev < 0:
         pendulum_angles = [base_vector for _ in range(5)]
         a, b = b, a

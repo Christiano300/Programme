@@ -1,7 +1,7 @@
 from PIL import Image
 
-path = "C:/Users/Christian/Pictures/"
-file = "create.png"
+path = "./files/"
+file = "colorfill.png"
 filepath = path + file
 
 
