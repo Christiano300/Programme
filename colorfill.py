@@ -1,4 +1,5 @@
 from random import randint
+from hashlib import sha3_256
 import pygame
 pygame.init()
 
@@ -21,8 +22,8 @@ fillpixels = []
 active = False
 
 fuzziness = 7
-paint_color = (250, 150, 0)
-variety = 5
+paint_color = (52, 21, 209)
+variety = 255
 
 while True:
     for event in pygame.event.get():
@@ -42,6 +43,8 @@ while True:
             
             elif event.key == pygame.K_s:
                 pygame.image.save(screen, "files/colorfill.png")
+                pixels = pygame.surfarray.array2d(screen)
+                print(sha3_256(pixels.data.tobytes()).hexdigest())
             
             elif event.key == pygame.K_f:
                 for i in width_range:
