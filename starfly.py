@@ -44,7 +44,7 @@ def screenspace(star: list[int]) -> tuple[int, int]:
     
     return x + xofs + width // 2, y + height // 2 + yofs # type: ignore
 
-
+# Simplex Noise by WardBenjamin at https://github.com/WardBenjamin/SimplexNoise/blob/master/SimplexNoise/Noise.cs ported to python
 _perm = [sha1(f"{i}".encode(), usedforsecurity=False).digest()[0] for i in range(256)]
 def simplex_1d(x):
     i0 = int(x)
