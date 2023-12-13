@@ -60,8 +60,8 @@ def select_player(id):
             print("Keine option!")
 
 ai_names = [i for i in os.listdir("./files/tictactoe-ais") if i.endswith(".py")]
-ais = [import_module("files.tictactoe-ais." + os.path.splitext(i)[0]) for i in ai_names]
-ais = {os.path.splitext(name)[0]: i for i, name in zip(ais, ai_names) if hasattr(i, "move")}
+ais_list = [import_module("files.tictactoe-ais." + os.path.splitext(i)[0]) for i in ai_names]
+ais = {os.path.splitext(name)[0]: i for i, name in zip(ais_list, ai_names) if hasattr(i, "move")}
 
 spieler_ai = [select_player(i) for i in range(2)]
 spielerbot = [i != -1 for i in spieler_ai]

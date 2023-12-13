@@ -11,15 +11,15 @@ linespace = 50
 dragging = False
 
 while True:
+    mouse_rel = pygame.mouse.get_rel()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
         elif event.type == pygame.MOUSEMOTION:
             if pygame.mouse.get_pressed()[0] and dragging:
-                rel = pygame.mouse.get_rel()
-                offset[0] += rel[0]
-                offset[1] += rel[1]
+                offset[0] += mouse_rel[0]
+                offset[1] += mouse_rel[1]
         elif event.type == pygame.MOUSEBUTTONDOWN:
             dragging = True
         elif event.type == pygame.MOUSEBUTTONUP:

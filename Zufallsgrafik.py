@@ -4,6 +4,8 @@ from turtle import *
 colors = ["red", "green", "gold", "blue", "lime", "yellow", "salmon", "lime", "coral", "peru", "olive", "springgreen", "darkred",
           "deepskyblue", "cyan", "crimson", "magenta", "mediumblue", "dodgerblue", "orchid", "mediumspringgreen", "aqua", "aquamarine"]
 
+screen = Screen()
+screen.tracer(0)
 
 def dreieck(l, w, x, y, c1, c2, dr):
     pu()

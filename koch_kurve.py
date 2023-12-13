@@ -20,7 +20,7 @@ speed(0)
 begin_fill()
 color("blue")
 for i in range(3):
-    kurve(10, 500)
+    kurve(5, 500)
     right(120)
 end_fill()
 done()

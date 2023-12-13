@@ -5,11 +5,14 @@ import pygame
 pygame.init()
 
 size = width, height = pygame.display.get_desktop_sizes()[0] # type: ignore
+# size = width, height = 256, 256 # type: ignore
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
+print(screen.get_height(), screen.get_width())
+
 stars = [[randint(50, 640), randint(-360, 360), randint(0, 1000)] for _ in range(1000)]
-# stars = [[i, j, k] for i in (60, 640) for j in range(-360, 360, 50) for k in range(0, 1000, 50)]
+# stars = [[x / 15, y / 15, z] for x in (60, 640) for y in range(-360, 360, 100) for z in range(0, 1000, 100)]
 front = False
 back = False
 
@@ -22,7 +25,7 @@ vel = 0
 rot = 0
 
 zoom = 25
-zs = 0
+zs = 10
 
 xofs = 0
 yofs = 0
@@ -31,19 +34,21 @@ pressed = [False, False, False, False]
 
 def screenspace(star: list[int]) -> tuple[int, int]:
     x, y, z = star
-    x *= sin(theta + z / 100)
-    z2 = cos(theta + z / 100 + pi) + 10
-    
+
+    z2 = sin(theta + z / 100) + x * sin(theta + z / 100) / 200 + zs
+    x *= cos(theta + z / 100)
+
     x *= zoom / z2
     y *= zoom / z2
-    
+
     cr = cos(rot)
     ci = sin(rot)
-    
+
     x, y = x * cr - y * ci, x * ci + y * cr
-    
+
     return x + xofs + width // 2, y + height // 2 + yofs # type: ignore
 
+star_recent_pos = [screenspace(star) for star in stars]
 
 _perm = [sha1(f"{i}".encode(), usedforsecurity=False).digest()[0] for i in range(256)]
 def simplex_1d(x):
@@ -59,7 +64,7 @@ def simplex_1d(x):
     t1 = 1 - x1 * x1
     t1 *= t1
     n1 = t1 * t1 * gradient(_perm[i1 & 0xff], x1)
-    
+
     return (0.395 * (n0 + n1))
 
 def gradient(hash: int, x: float) -> float:
@@ -73,7 +78,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-            
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 front = True
@@ -104,7 +109,10 @@ while True:
                 pressed[2] = False
             elif event.key == pygame.K_RIGHT:
                 pressed[3] = False
-    
+                
+            elif event.key == pygame.K_r:
+                screen.fill(0)
+
     if pressed[0]:
         yofs -= 5
     elif pressed[1]:
@@ -113,30 +121,38 @@ while True:
         xofs -= 5
     elif pressed[3]:
         xofs += 5
-        
-            
-            
-    screen.fill(0)
-    for star in stars:
-        pygame.draw.rect(screen, 0xffffff, (*screenspace(star), 2, 2))
     
+    
+
+    screen.fill(0)
+    
+    # for star in stars:
+    #     screenpos = screenspace(star)
+    #     # pygame.draw.rect(screen, 0xffffff, (*screenpos, 2, 2))
+    #     pygame.draw.aaline(screen, 0xffffff, screenpos, (screenpos[0], screenpos[1] + 1))
+    
+    new_star_positions = [screenspace(star) for star in stars]
+    for old, new in zip(star_recent_pos, new_star_positions):
+        pygame.draw.aaline(screen, 0xffffff, old, new)
+    star_recent_pos = new_star_positions
+
     if front:
         zoom *= 1.01
 
     elif back:
         zoom /= 1.01
-    
+
     theta += 0.002
-    pos += .008
+    # pos += .002
     acc = simplex_1d(pos) * 100
-    vel += acc / 80
+    vel += acc / 85
     vel *= 0.99
-    rot += vel / 6000
-    
-    # pygame.draw.line(screen, 0x0000ff, (50, 200 - acc), (200, 200 - acc))
-    # pygame.draw.line(screen, 0xff0000, (50, 200 - vel), (200, 200 - vel))
-    # pygame.draw.line(screen, 0x00ff00, (50, 200 - rot * 100), (200, 200 - rot * 100))
-    # pygame.draw.line(screen, 0xffffff, (50, 200), (200, 200))
-    
+    rot += vel / 6500
+
+    pygame.draw.line(screen, 0x0000ff, (50, 200 - acc), (200, 200 - acc))
+    pygame.draw.line(screen, 0xff0000, (50, 200 - vel), (200, 200 - vel))
+    pygame.draw.line(screen, 0x00ff00, (50, 200 - rot * 100), (200, 200 - rot * 100))
+    pygame.draw.line(screen, 0xffffff, (50, 200), (200, 200))
+
     pygame.display.update()
     clock.tick(60)

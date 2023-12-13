@@ -11,12 +11,11 @@ screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 STAR_FREQUENCY = 0
-WARP_DISTORTION = 1.1
-STAR_SPEED = .98
+WARP_DISTORTION = 1.5
+STAR_SPEED = .95
 ROTATION_SPEED = 0
 cooldown = 0
 stars = []
-center = []
 
 def approach_point(point: list, anchor: list, factor: float) -> list:
     x = (anchor[0] - point[0]) * factor

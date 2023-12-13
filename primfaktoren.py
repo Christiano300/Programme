@@ -11,7 +11,7 @@ def faktoren(n):
     return faktoren
 
 
-zahl = 1536
+zahl = 563948576439875632
 print("beginne primfaktorzerlegung...")
 faktorliste = faktoren(zahl)
 print("primfaktorzerlegung beendet\nstarte druckvorgang")

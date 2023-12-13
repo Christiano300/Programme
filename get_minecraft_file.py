@@ -26,6 +26,6 @@ while True:
     print("Object not found: " + objectpath)
 
 src = f"{path}/objects/{object['hash'][:2]}/{object['hash']}"
-dest = f"./files/{objectpath[objectpath.rfind('/') + 1:]}"
+dest = f"./ignfiles/{objectpath[objectpath.rfind('/') + 1:]}"
 
 shutil.copyfile(src, dest)

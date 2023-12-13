@@ -1,4 +1,4 @@
-from random import choice, randint, sample
+from random import choice, randint, randrange, sample
 import pygame
 from numpy import array
 from math import pow, e
@@ -15,7 +15,7 @@ word_fonts = {i: pygame.font.SysFont("Segoe UI", i) for i in range(20, 35)}
 text_font = pygame.font.SysFont("Segoe UI", 46, True)
 subtext_font = pygame.font.SysFont("Segoe UI", 30)
 
-with open('ignfiles/words.txt') as f:
+with open('ignfiles/words.txt', encoding="utf-8") as f:
     ram_eater = [i.strip() for i in f.readlines()]
     words_list = array(ram_eater)
     del ram_eater
@@ -64,12 +64,21 @@ class Word(pygame.sprite.Sprite):
 def get_random_position():
     return randint(100, width - 100), randint(50, height - 200)
 
+def range_sample(sample_range: tuple[int, int], sample_size):
+    sample = []
+    for _ in range(sample_size):
+        while True:
+            new_sample = randrange(*sample_range)
+            if not new_sample in sample:
+                break
+        sample.append(new_sample)
+    return sample
 
 def reset():
     global current_word, current_word_r
     words.empty()
     word_idxs = []
-    word_idxs.extend(sample(range(words_len), 20))
+    word_idxs.extend(range_sample((0, words_len), 20))
     for i in word_idxs:
         new_word = Word(*get_random_position(), 
                         words_list[i], choice(list(word_fonts.values())))
@@ -128,7 +137,7 @@ while True:
 
     if active:
         screen.fill(0xffffff)
-        words.update(screen, True)
+        # words.update(screen, True)
         words.update(screen, False)
         screen.blit(current_word_r, ((width - current_word_r.get_width()) // 2,
                                      height - 30 - current_word_r.get_height()))
