@@ -1,23 +1,34 @@
 import requests
 import json
+import beaupy
+import beaupy.spinners as spinners
+from rich.console import Console
 
-# ip = "play.hypixel.net"
-# ip = "116.202.217.71"
-# ip = "pc.einfachnurmaxi.de"
-# ip = "185.249.198.148:7001"
-ip = "ENMGaming.de:25576"
-url = "https://api.mcstatus.io/v1/status/java/" + ip
-r = requests.get(url)
-j = json.loads(r.text)
-online = j['online']
+
+with open("files/servers.json") as f:
+    servers: dict[str, str] = json.load(f)
+
+console = Console()
+console.print("Server: ")
+server = beaupy.select(list(servers.keys()))
+
+ip = servers[server] # type: ignore
+
+spinner = spinners.Spinner(spinners.CLOCK)
+spinner.start()
+res = json.loads(requests.get("https://api.mcstatus.io/v2/status/java/" + ip).text)
+spinner.stop()
+online = res['online']
 if online:
     print("Server online")
-    players = j["response"]["players"]
+    print(f"Mods: {len(res['mods'])}")
+    print(f"Plugins: {len(res['plugins'])}")
+    players = res["players"]
     if players["online"]:
         print(f'{players["online"]} / {players["max"]} Spieler')
-        sample = players["sample"]
+        sample = players.get("list")
         if sample:
-            print(f"Spieler: {', '.join((i['name'] for i in sample))}")
+            print(f"Spieler: {', '.join((i['name_clean'] for i in sample))}")
     else:
         print("Niemand online")
 else:

@@ -44,7 +44,7 @@ def print_results(zaehler, nenner, positiv):
         #positiv
         minus_zahl = ""
         minus_strich = ""
-        16
+        
     else:
         minus_zahl = "  "
         minus_strich = "- "

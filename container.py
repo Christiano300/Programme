@@ -1,6 +1,5 @@
 import pickle
 
-
 class Container:
     def __init__(self, content=None):
         self.empty = content is None

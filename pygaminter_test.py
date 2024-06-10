@@ -21,6 +21,7 @@ for i in range(11):
         b.config(textcolor=0xdfdfdf)
     if i % 2 == 1:
         b.config(font="Lucida Sans_35b")
+    b.config(active=False)
 
 
 b = Button((400, 300, 120, 50), "Test", 0xabcdef)

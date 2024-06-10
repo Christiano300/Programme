@@ -10,6 +10,6 @@ while True:
         if keyboard.is_pressed('rollen-feststell'):
             break
         keyboard.send('f5')
-        time.sleep(2.15)
-        # time.sleep(3.15)
+        # time.sleep(2.35)
+        time.sleep(3.75)
     time.sleep(5)

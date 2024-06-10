@@ -71,7 +71,8 @@ while True:
     draw()
     points.append(movable_points[3])
     print(len(points))
-    pygame.draw.lines(screen, 0, False, points, 2)
+    # pygame.draw.lines(screen, 0, False, points, 2)
+    pygame.draw.aalines(screen, 0, False, points)
     
     pygame.display.update()
     clock.tick(60)

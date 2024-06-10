@@ -24,7 +24,7 @@ def change(r, g, b):
 fillpixels = []
 active = False
 
-fuzziness = 6
+fuzziness = 8
 paint_color = (255, 170, 0)
 variety = 4
 

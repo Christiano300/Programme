@@ -20,7 +20,7 @@ f1_mode = False
 menu_buttons = [[None, None, False] for _ in range(16)]
 
 blocknames = [i for i in sorted(os.listdir(
-    "files/minecraft-textures")) if "concrete_powder" in i]
+    "files/minecraft-textures")) if "wool" in i]
 textures = [pygame.transform.scale(pygame.image.load(
     f"files/minecraft-textures/{i}"), [BLOCKSIZE, BLOCKSIZE]) for i in blocknames]
 
