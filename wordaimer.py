@@ -1,11 +1,12 @@
 from random import choice, randint, randrange, sample
+from tkinter.tix import MAX
 import pygame
 from numpy import array
 from math import pow, e
 pygame.init()
 
 size = width, height = pygame.display.get_desktop_sizes()[0] # type: ignore
-size = (width := width - 200, height := height - 200)
+size = (width := 1920 - 200, height := 1080 - 200)
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
@@ -15,16 +16,27 @@ word_fonts = {i: pygame.font.SysFont("Segoe UI", i) for i in range(20, 35)}
 text_font = pygame.font.SysFont("Segoe UI", 46, True)
 subtext_font = pygame.font.SysFont("Segoe UI", 30)
 
-with open('ignfiles/words.txt', encoding="utf-8") as f:
+with open('files/words_new.txt', encoding="utf-8") as f:
     ram_eater = [i.strip() for i in f.readlines()]
     words_list = array(ram_eater)
     del ram_eater
 
 words_len = words_list.size
 
+MAX_TIME_EASY = 600
+MAX_TIME_HARD = 1000
+
+RADIUS_CALC_EASY = lambda r: r + 10
+RADIUS_CALC_HARD = lambda r: r / 2 + 20
+
+WORD_COUNT_EASY = 20
+WORD_COUNT_HARD = 40
+
+POINTS_EASY = 100
+POINTS_HARD = 150
 
 score = 0
-max_time = 600
+max_time = 1000
 current_max_time = max_time
 current_time_left = current_max_time
 current_word: str
@@ -39,7 +51,7 @@ class Word(pygame.sprite.Sprite):
         self.text = text
         self.font = font
         self.size = font.size(text)
-        self.radius = self.size[0] + 10
+        self.radius = self.size[0] / 2 + 20
         self.image = font.render(text, True, 0)
         self.update_pos(x, y)
     
@@ -78,7 +90,7 @@ def reset():
     global current_word, current_word_r
     words.empty()
     word_idxs = []
-    word_idxs.extend(range_sample((0, words_len), 20))
+    word_idxs.extend(range_sample((0, words_len), 40))
     for i in word_idxs:
         new_word = Word(*get_random_position(), 
                         words_list[i], choice(list(word_fonts.values())))
@@ -127,7 +139,7 @@ while True:
                 continue
             if i.text == current_word: # type: ignore
                 x = current_time_left / current_max_time
-                score += round(1 / (1 + pow(e, -10 * (x - 0.5))) * 100)
+                score += round(1 / (1 + pow(e, -10 * (x - 0.5))) * 150)
                 current_time_left = current_max_time
                 current_max_time = current_max_time // 1.05
                 reset()
