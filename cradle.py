@@ -22,7 +22,7 @@ while True:
             pygame.quit()
             quit()
     
-    state = sin(t / 60) * 360 * 2
+    state = sin(t / 60) * 70
     if state * prev < 0:
         pendulum_angles = [base_vector for _ in range(5)]
         a, b = b, a

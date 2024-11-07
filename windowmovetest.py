@@ -20,6 +20,7 @@ def mainloop():
                 
         clock.tick(60)
         screen.fill("black")
+        print("test")
         pygame.display.flip()
 
 pygame.init()

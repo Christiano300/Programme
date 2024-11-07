@@ -11,8 +11,8 @@ screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 STAR_FREQUENCY = 0
-WARP_DISTORTION = 1.5
-STAR_SPEED = .95
+WARP_DISTORTION = 1.01
+STAR_SPEED = .96
 ROTATION_SPEED = 0
 cooldown = 0
 stars = []

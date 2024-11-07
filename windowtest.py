@@ -11,7 +11,7 @@ pygame.init()
 size = width, height = 640, 480
 clock = pygame.time.Clock()
 
-window = gw.getActiveWindow()
+screen = pygame.display.set_mode(size)
 running = True
 
 run_sim = False
@@ -42,7 +42,8 @@ def iint(x: list[float]) -> list[int]:
 
 
 def main():
-    screen = pygame.display.set_mode(size)
+    window = gw.getActiveWindow()
+    
     global running, run_sim
     vel: list[float] = [0, 0]
     pos: list[float] = [0, 0] if window is None else list(window.topleft)
@@ -123,13 +124,15 @@ def main():
 
 
 threading.Thread(target=main, daemon=True).start()
-
 hwnd = pygame.display.get_wm_info()["window"]
-while running:
-    message = win32gui.GetMessage(hwnd, 0, 0)
-    # print(message)
-    if message[0] != 0:
-        win32gui.TranslateMessage(message[1])
-        win32gui.DispatchMessage(message[1])
-    elif message[0] == -1:  # handle exit?
-        quit()
+try:
+    while running:
+        message = win32gui.GetMessage(hwnd, 0, 0)
+        if message[0] != 0:
+            win32gui.TranslateMessage(message[1])
+            win32gui.DispatchMessage(message[1])
+        elif message[0] == -1:  # handle exit?
+            quit()
+except:
+    print("error")
+    raise
