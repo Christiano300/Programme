@@ -1,6 +1,7 @@
 from time import sleep
 import pyautogui as pg
 import pygame
+import pygame.gfxdraw
 import pygetwindow as gw
 import win32gui
 import threading
@@ -11,7 +12,7 @@ pygame.init()
 size = width, height = 640, 480
 clock = pygame.time.Clock()
 
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 running = True
 
 run_sim = False
@@ -42,11 +43,14 @@ def iint(x: list[float]) -> list[int]:
 
 
 def main():
+    # window = gw.getWindowsWithTitle("about:blank - Google Chrome")[0]
     window = gw.getActiveWindow()
-    
+
     global running, run_sim
     vel: list[float] = [0, 0]
     pos: list[float] = [0, 0] if window is None else list(window.topleft)
+    d = 1
+    b = 2
 
     last_mouse: pg.Point | None = None
     rel = (0, 0)
@@ -80,10 +84,7 @@ def main():
         rel = (mouse[0] - last_mouse[0], mouse[1] - last_mouse[1])
         last_mouse = mouse
 
-        screen.fill((255, 255, 255))
-        pygame.draw.circle(
-            screen, 0x40FF40 if run_sim else 0xF03333, (width // 2, height // 2), 50
-        )
+
 
         if run_sim and win32api.GetKeyState(0x01) in [0, 1]:
             prev = iint(pos)
@@ -101,23 +102,41 @@ def main():
 
             if pos[1] + window.height > desktop_height:
                 pos[1] = int(desktop_height - window.height)
-                vel[1] = -vel[1] * 0.5
+                vel[1] = -vel[1] * 1.1
                 vel[0] *= 0.9
 
             elif pos[1] < 0:
                 pos[1] = 0
-                vel[1] = -vel[1] * 0.5
+                vel[1] = -vel[1] * 0.3
                 vel[0] *= 0.9
 
             if pos[0] < 0:
                 pos[0] = 0
                 vel[0] = -vel[0] * 0.5
-                
+
             elif pos[0] + window.width > desktop_width:
                 pos[0] = desktop_width - window.width
                 vel[0] = -vel[0] * 0.5
 
+
+            window.resize(b, d)
+            window.move(- b // 2, - d // 2)
+            if window.height > 700:
+                d = -2
+            elif window.height < 300:
+                d = 2
+            if window.width > 1000:
+                b = -2
+            elif window.width < 500:
+                b = 2
+
             window.moveTo(*iint(pos))
+
+        screen.fill((255, 255, 255))
+        pygame.gfxdraw.aacircle(screen, width // 2, height // 2, 50, (64, 255, 64) if run_sim else (240, 51, 51))
+        pygame.gfxdraw.filled_circle(screen, width // 2, height // 2, 50, (64, 255, 64) if run_sim else (240, 51, 51))
+        pygame.display.update()
+
 
         pygame.display.update()
         clock.tick(60)

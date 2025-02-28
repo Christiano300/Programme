@@ -65,6 +65,7 @@ while True:
             if value < best_value:
                 best_value = value
                 best_nail = i
+            print(value)
         if best_nail == current_nail:
             active = False
             print("something probably went wrong and this is the end at iteration " + str(iteration))
