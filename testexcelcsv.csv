@@ -1,4 +1,109 @@
-number;double
-1;2
-2;4
-3;6
+from random import randint
+from time import perf_counter
+from tqdm import tqdm
+from math import exp
+from numba import jit, njit
+import numpy as np
+import pygame
+
+from bezier import draw
+
+pygame.init()
+size = width, height = 400, 400
+screen = pygame.display.set_mode(size)
+clock = pygame.time.Clock()
+
+BANDWIDTH = 20
+X = np.random.uniform(100, 300, 50)
+Y = np.random.uniform(100, 300, 50)
+VALUES = np.random.uniform(0, 255, 50)
+
+
+@njit
+def kernel(x): return np.exp(-1 * x * x)
+
+
+def kde(points, x, y):
+    total = 0
+    for point, _ in points:
+        distance = point.distance_to(pygame.Vector2(x, y))
+        total += kernel(distance / BANDWIDTH)
+    total /= (BANDWIDTH * len(points))
+    return total
+
+
+@njit(error_model="numpy", fastmath=True)
+def kve(points_x, points_y, values, x, y):
+    # density = 0
+    # for point in points:
+    #     distance = np.hypot(point[0] - x, point[1] - y)
+    #     density += kernel(distance / BANDWIDTH)
+    distance = np.hypot(points_x - x, points_y - y)
+    density = np.sum(kernel(distance / BANDWIDTH))
+
+    # value = 0
+    # for point, v_i in zip(points, values):
+    #     distance = np.hypot(point[0] - x, point[1] - y)
+    #     value += kernel(distance / BANDWIDTH) * v_i
+    value = np.sum(kernel(distance / BANDWIDTH) * values)
+
+    return (density / (BANDWIDTH * len(points_x)), value / density if density > 0 else 0)
+
+
+@njit(fastmath=True)
+def cmap(value):
+    return (value * 255, (1 - value) * 255, 0)
+
+
+@njit(fastmath=True)
+def cmult(color, mult):
+    return (int(color[0] * mult), int(color[1] * mult), int(color[2] * mult))
+
+
+def draw_kde():
+    pxarray = pygame.surfarray.pixels3d(screen)
+    for x in tqdm(range(width)):
+        for y in range(height):
+            # density = kde(X, Y, x, y)
+            density = int(density * 10_000)
+            pxarray[x, y] = (density, density, density)
+    pygame.display.update()
+
+
+@njit(fastmath=True)
+def draw_kve(pxarray: np.ndarray):
+    densities = np.zeros((width, height), dtype=np.float32)
+    values = np.zeros((width, height), dtype=np.float32)
+
+    for x in range(width):
+        for y in range(height):
+            density, weight = kve(X, Y, VALUES, x, y)
+            densities[x, y] = density
+            values[x, y] = weight
+
+    max_density = np.max(densities)
+
+    for x in range(width):
+        for y in range(height):
+            density = densities[x, y]
+            value = values[x, y]
+            density = density / max_density if max_density > 0 else 0
+            color = cmap(value / 255)
+            pxarray[x, y] = cmult(color, density)
+
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            draw_kve(pygame.surfarray.pixels3d(screen))
+            start = perf_counter()
+            draw_kve(pygame.surfarray.pixels3d(screen))
+            end = perf_counter()
+            print(f"Time taken: {end - start:.4f} seconds")
+            pygame.display.update()
+
+    clock.tick(60)

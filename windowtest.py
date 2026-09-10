@@ -95,6 +95,7 @@ def main():
                 vel[1] = rel[1] * 0.45
 
             vel[0] *= AIR_FRICTION
+            vel[1] *= AIR_FRICTION
             vel[1] += GRAVITY
 
             pos[0] += vel[0]
@@ -119,10 +120,10 @@ def main():
                 vel[0] = -vel[0] * 0.5
 
 
-            window.resize(b, d)
+            # window.resize(b, d)
             window.move(- b // 2, - d // 2)
             if window.height > 700:
-                d = -2
+                d = -2  
             elif window.height < 300:
                 d = 2
             if window.width > 1000:

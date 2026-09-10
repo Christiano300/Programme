@@ -10,8 +10,7 @@ def faktoren(n):
     faktoren.append(n)
     return faktoren
 
-
-zahl = 563948576439875632
+zahl = 26140548355938493
 print("beginne primfaktorzerlegung...")
 faktorliste = faktoren(zahl)
 print("primfaktorzerlegung beendet\nstarte druckvorgang")

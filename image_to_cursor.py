@@ -41,7 +41,12 @@ pixels = im.getdata()
 for i in range(im.size[1]):
     line = []
     for j in range(im.size[0]):
-        line.append(colors[pixels[i * im.size[0] + j]])
+        try:
+            line.append(colors[pixels[i * im.size[0] + j]])
+        except KeyError:
+            print("Pixel at position", (j, i), "has color",
+                  pixels[i * im.size[0] + j], "which is not supported.")
+            exit()
     strings.append("".join(line))
 print("_custom_cursor_ = (\"", "\",\n\"".join(strings), "\")", sep="")
 print("pygame.cursors.compile(_custom_cursor_, black='X', white='.', xor='o')")

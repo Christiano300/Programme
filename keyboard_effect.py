@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 
 font = get_font("Calibri_35b")
 
-with open("files/keyboard.json") as f:
+with open("files/keyboard.json", encoding="utf-8") as f:
     deeta = json.load(f)
 
 

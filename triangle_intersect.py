@@ -18,10 +18,10 @@ draw = True
 def update():
     screen.fill(0xffffff)
     pygame.draw.circle(screen, (0, 0, 0), center, radius, 2)
-    
+
     a1 = [rand() for _ in range(3)]
     a2 = [rand() for _ in range(3)]
-    
+
     if auto:
         corners = a1 + a2
         t = list(range(6))
@@ -36,15 +36,15 @@ def update():
     if draw:
         t1 = [cartesian(a) for a in a1]
         t2 = [cartesian(a) for a in a2]
-        
+
         pygame.draw.polygon(screen, "0xc000007f", t1)
         pygame.draw.polygon(screen, "0x00c0007f", t2)
-        
+
     print(f"{y = }, {n = }, %y = {y / (y + n) * 100 if y + n > 0 else 0}")
 
 def rand():
     return random.uniform(0, pi * 2)
-    
+
 
 def cartesian(angle):
     return (cos(angle) * radius + center[0], sin(angle) * radius + center[1])
@@ -76,11 +76,11 @@ while True:
             elif event.key == pygame.K_n:
                 n += 1
                 update()
-    
+
     if auto:
         update()
     draw = True
-    keys = pygame.key.get_pressed() 
+    keys = pygame.key.get_pressed()
     if keys[pygame.K_h]:
         draw = False
     elif keys[pygame.K_s]:
@@ -88,7 +88,7 @@ while True:
         clock.tick()
     elif keys[pygame.K_f]:
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(20)
     else:
         pygame.display.update()
         clock.tick(2)

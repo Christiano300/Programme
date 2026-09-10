@@ -69,4 +69,4 @@ while True:
         i.draw()
         i.move()
     pygame.display.update()
-    uhr.tick()
+    uhr.tick(300)

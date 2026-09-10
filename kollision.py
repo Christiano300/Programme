@@ -15,8 +15,9 @@ class Rechteck(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = ort
         self.speed = speed
+
     def bewegen(self):
-        self.rect =self.rect.move(self.speed)
+        self.rect = self.rect.move(self.speed)
         if self.rect.left < 0 or self.rect.right > breite:
             self.speed[0] = -self.speed[0]
         

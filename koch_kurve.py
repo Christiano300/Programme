@@ -12,15 +12,17 @@ def kurve(n, l):
     else:
         fd(l)
 
+speed(0)
+tracer(0)
+
 pu()
-goto(-200, 200)
+goto(-250, 130)
 pd()
 ht()
-speed(0)
-begin_fill()
+# begin_fill()
 color("blue")
 for i in range(3):
-    kurve(5, 500)
+    kurve(4, 500)
     right(120)
-end_fill()
+# end_fill()
 done()

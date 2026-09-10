@@ -25,8 +25,8 @@ def prim_besser(n):
             return False
     return True
 
-while True:
-    zahl = int(input("Zahl: "))
-    print(f"normal_for: {prim_normal_for(zahl)}")
-    print(f"normal_while: {prim_normal_while(zahl)}")
-    print(f"besser: {prim_besser(zahl)}")
+for i in range(100, 1000):
+    if prim_besser(i) and all(prim_besser(int(k)) for k in str(i)):
+        s = str(i)
+        if prim_besser(int(s[:2])) and prim_besser(int(s[1:])):
+            print(i)

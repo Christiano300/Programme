@@ -1,5 +1,5 @@
 import pygame
-pygame.init()
+# pygame.init()
 
 size = width, height = 640, 480
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)

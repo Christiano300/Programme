@@ -2,9 +2,10 @@ from random import randint
 from hashlib import sha3_256
 import os
 import pygame
+from numba import jit, njit
 pygame.init()
 
-size = width, height = 640, 480
+size = width, height = 800, 800
 screen = pygame.display.set_mode(size, pygame.NOFRAME)
 clock = pygame.time.Clock()
 
@@ -13,11 +14,11 @@ height_range = range(height)
 
 os.makedirs("files/colorfill", exist_ok=True)
 
-
+@njit
 def saturate(x):
     return min(max(x, 0), 255)
 
-
+@njit
 def change(r, g, b):
     return saturate(r + randint(-variety, variety)), saturate(g + randint(-variety, variety)), saturate(b + randint(-variety, variety))
 
@@ -25,38 +26,38 @@ fillpixels = []
 active = False
 
 fuzziness = 8
-paint_color = (255, 170, 0)
-variety = 4
+paint_color = (255, 127, 0)
+variety = 6
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-        
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_u:
                 pygame.display.update()
-            
+
             elif event.key == pygame.K_r:
                 screen.fill(0)
-            
+
             elif event.key == pygame.K_c:
                 fillpixels = []
-                
+
             elif event.key == pygame.K_q:
                 pygame.quit()
                 quit()
-            
+
             elif event.key == pygame.K_a:
                 active = not active
-            
+
             elif event.key == pygame.K_s:
                 pixels = pygame.surfarray.array2d(screen)
                 hash = sha3_256(pixels.data.tobytes()).hexdigest()
                 pygame.image.save(screen, f"files/colorfill/{hash}.png")
                 print(hash)
-            
+
             elif event.key == pygame.K_f:
                 for i in width_range:
                     for j in height_range:
@@ -77,10 +78,10 @@ while True:
     if pygame.mouse.get_pressed()[0]:
         fillpixels.append((pygame.mouse.get_pos(), paint_color))
         screen.set_at(pygame.mouse.get_pos(), paint_color)
-    
+
     if active:
         new_fillpixels = []
-        
+
         for pixel in fillpixels:
             if randint(0, 10) < fuzziness:
                 screen.set_at(pixel[0], pixel[1])
@@ -91,10 +92,10 @@ while True:
                         screen.get_at(new_pixel) == (0, 0, 0, 255) and not new_pixel in [p[0] for p in new_fillpixels]:
                         new_fillpixels.append((new_pixel, change(*pixel[1])))
             # else:
-            #     if not pixel[0] in [p[0] for p in new_fillpixels]:
-            #         new_fillpixels.append(pixel)
+            #    if not pixel[0] in [p[0] for p in new_fillpixels]:
+            #        new_fillpixels.append(pixel)
 
         fillpixels = new_fillpixels
 
     pygame.display.update()
-    clock.tick(60)
+    clock.tick()
