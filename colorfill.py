@@ -5,7 +5,7 @@ import pygame
 from numba import jit, njit
 pygame.init()
 
-size = width, height = 800, 800
+size = width, height = 640, 480
 screen = pygame.display.set_mode(size, pygame.NOFRAME)
 clock = pygame.time.Clock()
 
@@ -26,8 +26,8 @@ fillpixels = []
 active = False
 
 fuzziness = 8
-paint_color = (255, 127, 0)
-variety = 6
+paint_color = (255, 150, 255)
+variety = 10
 
 while True:
     for event in pygame.event.get():

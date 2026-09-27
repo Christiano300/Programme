@@ -13,7 +13,7 @@ INIT_GRID_SIZE = 20
 
 pygame.init()
 # Load image, set display to enable convert, convert image, transform image to block size, set display to new size
-image = pygame.image.load(r"files/gits.jpg")
+image = pygame.image.load(r"files/grass_block.png")
 size = width, height = image.get_size()
 screen = pygame.display.set_mode(size)
 image = image.convert()

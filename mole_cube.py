@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from z3.z3 import IntVector, Solver, Sum, help_simplify, is_int, Distinct, simplify, And
+from z3.z3 import IntVector, Solver, Distinct
 
 pieces = IntVector('p', 26)
 
